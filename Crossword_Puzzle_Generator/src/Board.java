@@ -18,8 +18,6 @@ public class Board {
 		myWidth = width;
 		myHeight = height;
 		cells = new String[width][height];
-		fillCells();
-		printBoard();
 	}
 
 	public void fillCells()
