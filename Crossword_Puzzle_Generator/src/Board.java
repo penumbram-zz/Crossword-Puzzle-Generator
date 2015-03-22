@@ -118,17 +118,14 @@ public class Board {
 							temp2[1] = m;
 							verticalList.add(temp2);	
 						}
-						
-						//PRINT VERTICAL LIST
-						log("");
-						log("");
-						
 
 						for (String word : Dictionary.letterLists.get(verticalList.size()))
 						{
 							//log("Word: " + word);
 							if (firstWord.substring(m, m+1).equalsIgnoreCase(word.substring(0, 1)))
 							{
+								
+								// WRITE VERTICAL WORD
 								for (int o = 0; o < verticalList.size(); o++)
 								{
 									cells[verticalList.get(o)[0]][verticalList.get(o)[1]] = Character.toString(word.charAt(o));
@@ -138,6 +135,7 @@ public class Board {
 								
 								Dictionary.letterLists.get(verticalList.size()).remove(word);
 								log("Wrote " + word + " and now moving to the next word");
+								// WRITE VERTICAL WORD
 								break;
 							}
 						}
