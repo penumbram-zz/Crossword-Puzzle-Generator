@@ -114,7 +114,7 @@ public class Dictionary
 	
 	
 	
-	public void printLetters(int a)
+	public static void printLetters(int a)
 	{
 		ArrayList<String> myList;
 		if (a >= 1 && a <= 10)

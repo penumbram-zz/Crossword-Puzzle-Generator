@@ -1,4 +1,6 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 
@@ -55,6 +57,7 @@ public class Board {
 			{
 				 Random r = new Random();
 				 int a = r.nextInt(5);
+				 a = 1; //TODO NO RANDOM CELLS AT THE MOMENT, ALL BLANK
 				 if (a == 0)
 				 {
 					 cells[i][j] = "X";
@@ -94,18 +97,60 @@ public class Board {
 						continue;
 					}
 					
-					String firstWord = Dictionary.letterLists.get(l).get(10);
+					String firstWord = Dictionary.letterLists.get(l).get(12);
 					System.out.println(firstWord);
 					
 					for (int j = 0; j < someList.size(); j++)
 					{
 						cells[someList.get(j)[0]][someList.get(j)[1]] = Character.toString(firstWord.charAt(j));
 					}
+					Dictionary.letterLists.get(someList.size()).remove(firstWord);
+					log("HIT HERE");
 					
-					someList.clear();
+					ArrayList<int[]> verticalList = new ArrayList<>();
+					for (int m = 0; m < myWidth; m++)
+					{
+						log("i = " + i);
+						for (int n = 0; n < myWidth; n++)
+						{
+							int[] temp2 = new int[2];
+							temp2[0] = n;
+							temp2[1] = m;
+							verticalList.add(temp2);	
+						}
+						
+						//PRINT VERTICAL LIST
+						log("");
+						log("");
+						
+
+						for (String word : Dictionary.letterLists.get(verticalList.size()))
+						{
+							//log("Word: " + word);
+							if (firstWord.substring(m, m+1).equalsIgnoreCase(word.substring(0, 1)))
+							{
+								for (int o = 0; o < verticalList.size(); o++)
+								{
+									cells[verticalList.get(o)[0]][verticalList.get(o)[1]] = Character.toString(word.charAt(o));
+									log("o = " + o);
+									log("cell[" + String.valueOf(verticalList.get(o)[0]) + "][" + String.valueOf(verticalList.get(o)[1]) + "]" + " = " + Character.toString(word.charAt(o)));
+								}
+								
+								Dictionary.letterLists.get(verticalList.size()).remove(word);
+								log("Wrote " + word + " and now moving to the next word");
+								break;
+							}
+						}
+						verticalList.clear();
+					}
+					return;
 				}
 			}
+			someList.clear();
 		}
 	}
-
+	public void log(String s)
+	{
+		System.out.println(s);
+	}
 }

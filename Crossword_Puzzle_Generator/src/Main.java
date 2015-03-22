@@ -6,14 +6,14 @@ public class Main {
 	 */
 	public static void main(String[] args) 
 	{	
-		Board board = new Board(5,5);
+		Board board = new Board(4,4);
 		board.fillBoardWithRandomBlackCells();
 		board.printBoard();
 		
 		Dictionary dict = new Dictionary();
 		dict.fillDictionary();
 		//dict.printDictionary();
-		dict.printLetters(1);
+		Dictionary.printLetters(1);
 		board.fillBoardWithWords();
 		board.printBoard();
 	}
