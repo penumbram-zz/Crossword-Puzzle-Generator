@@ -87,7 +87,6 @@ public class Board {
 				if (cells[k][i] == "X" || i == (myWidth-1))
 				{
 					int l = someList.size();
-					System.out.println("Size: " + l);
 					
 					if (l == 1)
 					{
