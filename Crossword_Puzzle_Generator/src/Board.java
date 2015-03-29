@@ -1,7 +1,12 @@
+import java.awt.List;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.Random;
+import java.util.logging.Logger;
 
 
 public class Board {
@@ -9,7 +14,8 @@ public class Board {
 	String[][] cells;
 	int myWidth;
 	int myHeight;
-	
+	ArrayList<String> wordsInBoard = new ArrayList<String>();
+	ArrayList<ArrayList<int[]>> longestPaths = new ArrayList<ArrayList<int[]>>();
 	// Desktop git push check
 	
 	
@@ -39,33 +45,33 @@ public class Board {
 	
 	public void printBoard()
 	{
+		System.out.println(wordsInBoard);
 		System.out.println();
-		for (int i = 0; i < cells.length; i++)
+		log(String.valueOf(cells.length));
+		for (int i = 0; i < myHeight; i++)
 		{
 			System.out.print("|");
-			for (int j = 0; j < cells[i].length; j++) 
-				System.out.print(cells[i][j] + "|");
+			for (int j = 0; j < myWidth; j++) 
+				System.out.print(cells[j][i] + "|");
 			System.out.println();
 		}
 	}
 	
-	public void fillBoardWithRandomBlackCells()
+	public void fillBoardWithFixedBlackCells()
 	{
-		for (int i = 0; i < myWidth; i++)
+		for (int i = 1; i < myWidth-1; i++) 
 		{
-			for (int j = 0; j <myHeight; j++) 
+			cells[i][i] = "X";
+		}
+	}
+	
+	public void initBoard()
+	{
+		for (int i = 0; i < myHeight; i++)
+		{
+			for (int j = 0; j <myWidth; j++) 
 			{
-				 Random r = new Random();
-				 int a = r.nextInt(5);
-				 a = 1; //TODO NO RANDOM CELLS AT THE MOMENT, ALL BLANK
-				 if (a == 0)
-				 {
-					 cells[i][j] = "X";
-				 }
-				 else
-				 {
-					 cells[i][j] = " ";
-				 }
+					 cells[j][i] = " ";
 			}
 		}
 	}
@@ -87,68 +93,368 @@ public class Board {
 					temp[1] = i;
 					someList.add(temp);
 				}
-				if (cells[k][i] == "X" || i == (myWidth-1))
+				if ((cells[k][i] == "X" || i == (myWidth-1)) && !someList.isEmpty())
 				{
-					int l = someList.size();
-					
-					if (l == 1)
-					{
-						someList.clear();
-						continue;
-					}
-					
-					String firstWord = Dictionary.letterLists.get(l).get(12);
-					System.out.println(firstWord);
-					
-					for (int j = 0; j < someList.size(); j++)
-					{
-						cells[someList.get(j)[0]][someList.get(j)[1]] = Character.toString(firstWord.charAt(j));
-					}
-					Dictionary.letterLists.get(someList.size()).remove(firstWord);
-					log("HIT HERE");
-					
-					ArrayList<int[]> verticalList = new ArrayList<>();
-					for (int m = 0; m < myWidth; m++)
-					{
-						log("i = " + i);
-						for (int n = 0; n < myWidth; n++)
-						{
-							int[] temp2 = new int[2];
-							temp2[0] = n;
-							temp2[1] = m;
-							verticalList.add(temp2);	
-						}
-
-						for (String word : Dictionary.letterLists.get(verticalList.size()))
-						{
-							//log("Word: " + word);
-							if (firstWord.substring(m, m+1).equalsIgnoreCase(word.substring(0, 1)))
-							{
-								
-								// WRITE VERTICAL WORD
-								for (int o = 0; o < verticalList.size(); o++)
-								{
-									cells[verticalList.get(o)[0]][verticalList.get(o)[1]] = Character.toString(word.charAt(o));
-									log("o = " + o);
-									log("cell[" + String.valueOf(verticalList.get(o)[0]) + "][" + String.valueOf(verticalList.get(o)[1]) + "]" + " = " + Character.toString(word.charAt(o)));
-								}
-								
-								Dictionary.letterLists.get(verticalList.size()).remove(word);
-								log("Wrote " + word + " and now moving to the next word");
-								// WRITE VERTICAL WORD
-								break;
-							}
-						}
-						verticalList.clear();
-					}
-					return;
+					//placeHorizontalWord(someList);
 				}
 			}
 			someList.clear();
 		}
 	}
+	
+	private int getRange(int[] coords,boolean vertical)
+	{
+		
+		int x = coords[0];
+		int y = coords[1];
+		int count = 0;
+		Boolean b = true;
+		boolean firstRun = true;
+		while(b)
+		{
+			if (vertical)
+				y++;
+			else
+				x++;
+			
+			if (vertical && y >= myHeight)
+			{
+				if (firstRun)
+					return 0;
+				else
+					return count;
+			}
+				
+			else if (!vertical && x >= myWidth)
+			{
+				if (firstRun)
+					return 0;
+				else
+					return count;
+			}
+			
+			if (cells[x][y] != null && !cells[x][y].equalsIgnoreCase("X"))
+			{
+				count++;
+			}
+			else
+			{
+				b = false;
+			}
+			firstRun = false;
+		}
+		return count;
+	}
+	
+	private void placeWord(ArrayList<int[]> someList,boolean isVertical)
+	{
+		int l = someList.size(); // width of the word
+		
+	 	if (l == 1) //if a single letter word, just quit
+		{
+			someList.clear();
+			return;
+		}
+	
+		//Random rnd = new Random();
+		//int max = Dictionary.letterLists.get(l).size();
+		//String firstWord = Dictionary.letterLists.get(l).get(rnd.nextInt(max + 1));
+		String word = selectWordForPath(someList);
+	 	
+		if (word == null) 
+			return;
+		
+		int a;
+		int b;
+		if (isVertical)
+		{
+			a = 0;
+			b = 1;
+		}
+		else
+		{
+			a = 1;
+			b = 0;
+		}
+
+		for (int j = 0; j < someList.size(); j++)
+		{
+			cells[someList.get(j)[a]][someList.get(j)[b]] = Character.toString(word.charAt(j));
+		}
+		wordsInBoard.add(word);
+		Dictionary.letterLists.get(someList.size()).remove(word);
+		
+		//placeVerticalWordsWithHorizontalWord(firstWord,someList);
+		
+	}
+	private void placeVerticalWordsWithHorizontalWord(String horizontalWord,ArrayList<int[]> coords)
+	{
+		//int myRange = getRange(coords.get(0),true);
+		HashMap<String, Integer> scoresList = new HashMap<String, Integer>();
+		
+		for (String s : Dictionary.letterLists.get(coords.size()))
+		{
+			if (String.valueOf(s.charAt(0)).equalsIgnoreCase(String.valueOf(horizontalWord.charAt(0)))) // if 0/0 letter equals first letter of s (a.k.a. inspected word)
+			{
+				String[] letters = s.split(""); // get the letters of s
+				int score = 0; // initialize score to 0
+				for (String  s2 : Dictionary.letterLists.get(coords.size()))
+				{
+					if (String.valueOf(s2.charAt(0)).equalsIgnoreCase(letters[1]))
+					{
+						score++;
+					}
+				}
+				scoresList.put(s, new Integer(score));
+				
+			}
+		}
+		log((Collections.max(scoresList.values())) + " - " + getWordsWithMaxScores(scoresList).toString()); // prints words with highest scores
+		Random rnd = new Random();
+		
+		int index = rnd.nextInt(getWordsWithMaxScores(scoresList).size());
+		String wordd = getWordsWithMaxScores(scoresList).get(index);
+	//	Object myKey = scoresList.keySet().toArray()[index];
+		log(wordd);
+		//placeVerticalWord(wordd,coords);
+	}
+	
+/*	private void placeVerticalWord(String word,ArrayList<int[]> coords)
+	{
+		logCoords(coords);
+		log(word);
+		for (int j = 0; j < coords.size(); j++)
+		{
+			cells[coords.get(j)[1]][coords.get(j)[0]] = Character.toString(word.charAt(j)); //TODO this is reversed for some reason, probably wrong
+		}
+		wordsInBoard.add(word);
+		Dictionary.letterLists.get(coords.size()).remove(word);
+	}
+*/
+	private int wordScore(String word)
+	{
+		for (String w : Dictionary.letterLists.get(word.length()))
+		{
+			
+		}
+		return 0;
+	}
+	
+	private ArrayList<String> getWordsWithMaxScores(HashMap<String, Integer> map)
+	{
+		ArrayList<String> result = new ArrayList<String>();
+		 int maxValueInMap=(Collections.max(map.values()));  // This will return max value in the Hashmap
+	        for (Entry<String, Integer> entry : map.entrySet()) {  // Itrate through hashmap
+	            if (entry.getValue()==maxValueInMap) {
+	                result.add(entry.getKey());     // Print the key with max value
+	            }
+	        }
+	        return result;
+	}
+	
+	public void searchLongestPaths()
+	{
+		log("---------  Horizontal --------");
+		ArrayList<int[]> path = new ArrayList<int[]>();
+		ArrayList<ArrayList<int[]>> paths = new ArrayList<ArrayList<int[]>>();
+		int i = 0;
+		for (i = 0; i < myWidth; i++)
+		{
+			for (int j = 0; j < myHeight; j++)
+			{
+				if (cells[i][j] == " ")
+				{
+					path.add(newCoordinates(i, j));
+				}
+				else if (cells[i][j] == "X")
+				{
+					ArrayList<int[]> temp = new ArrayList<int[]>();
+					temp.addAll(path);
+					paths.add(temp);
+					logCoords(path);
+					log("");
+					path.clear();
+					continue;
+				}
+			}
+			ArrayList<int[]> temp = new ArrayList<int[]>();
+			temp.addAll(path);
+			paths.add(temp);
+			logCoords(path);
+			log("");
+			path.clear();
+		}
+		
+		path.clear();
+		log("---------  Vertical --------");
+		
+		for (i = 0; i < myHeight; i++)
+		{
+			for (int j = 0; j < myWidth; j++)
+			{
+				if (cells[i][j] == " ")
+				{
+					path.add(newCoordinates(j, i));
+				}
+				else if (cells[i][j] == "X")
+				{
+					ArrayList<int[]> temp = new ArrayList<int[]>();
+					temp.addAll(path);
+					paths.add(temp);
+					logCoords(path);
+					log("");
+					path.clear();
+					continue;
+				}
+			}
+			ArrayList<int[]> temp = new ArrayList<int[]>();
+			temp.addAll(path);
+			paths.add(temp);
+			logCoords(path);
+			log("");
+			path.clear();
+		}
+		
+		log("Longest Paths: ");
+		
+		for (i = 0; i < paths.size(); i++)
+		{
+			if (paths.get(i).size() == 4)
+			{
+				logCoords(paths.get(i));
+				longestPaths.add(paths.get(i));
+			}
+		}
+	}
+	
+	private int[] newCoordinates(int x, int y)
+	{
+		int[] temp = new int[2];
+		temp[0] = x;
+		temp[1] = y;
+		return temp;
+	}
+	
+	public void fillLongestWords()
+	{
+		for (int i = 0; i < longestPaths.size(); i++)
+		{
+			ArrayList<int[]> pathToFill = longestPaths.get(i);
+			placeWord(pathToFill,isVertical(pathToFill));
+		}
+	}
+	
+	private boolean isVertical(ArrayList<int[]> path)
+	{
+		int a = -1;
+		int b = -1;
+
+		if (path.get(0)[0] == path.get(1)[0])
+			return true;
+		else if (path.get(0)[1] == path.get(1)[1])
+			return false;
+		else
+		{
+			log("ERROR ERROR ERROR ERROR ERROR ERROR ERROR");
+			return false;
+		}
+			
+	}
+	
+	//LOGGING
 	public void log(String s)
 	{
 		System.out.println(s);
+	}
+	
+	private String selectWordForPath(ArrayList<int[]> list)
+	{
+		log("Selecting Word For Path: ");
+		logCoords(list);
+	//	ArrayList<Integer> fullCells = new ArrayList<Integer>();
+		String[] letters = new String[list.size()];
+		for (int i = 0; i < list.size(); i++)
+		{
+			if (cells[list.get(i)[0]][list.get(i)[1]].equalsIgnoreCase(" "))
+			{
+				log("free cell");
+				letters[i] = " ";
+			}
+			else
+			{
+				log("full cell");
+				letters[i] = cells[list.get(i)[0]][list.get(i)[1]];
+		//		fullCells.add(i);
+			}
+		}
+		
+		for (int i = 0; i < letters.length; i++) 
+			log("letters[" + i + "] = " + letters[i]);
+		
+		ArrayList<String> candidateWords = new ArrayList<String>();
+		for (String string : Dictionary.letterLists.get(letters.length))
+		{
+			boolean flag = true;
+			for (int i = 0; i < letters.length; i++)
+			{
+				if (!(letters[i].equalsIgnoreCase(" ")) && !(String.valueOf(string.charAt(i)).equalsIgnoreCase(letters[i])))
+				{
+					flag = false;
+				}
+			}
+			if (flag)
+				candidateWords.add(string);
+		}
+		log(candidateWords.toString());
+		
+		HashMap<String, Integer> scoresList = new HashMap<String, Integer>();
+		for (String s : candidateWords)
+		{
+			
+			
+			for (int i = 0; i < letters.length; i++)
+			{
+				//logCoords(list);
+				//log("[" + list.get(i)[0] + "][" + list.get(i)[1] + "]");
+				int range = getRange(list.get(i), false);
+				if (range == 1) //skip
+					continue;
+				//log("Vertical cells: " + String.valueOf(range));
+				int score = 0; // initialize score to 0
+				scoresList.clear();
+				for (String a_word : Dictionary.letterLists.get(range+1)) 
+				{
+					if (String.valueOf(a_word.charAt(0)).equalsIgnoreCase(String.valueOf(s.charAt(i))))
+					{
+						score++;
+					}
+				}
+				scoresList.put(s, new Integer(score));
+			}
+		}
+	//	log(scoresList.toString());
+		//TODO somehow it doesn't add after first word
+		log((Collections.max(scoresList.values())) + " - " + getWordsWithMaxScores(scoresList).toString()); // prints words with highest scores
+		Random rnd = new Random();
+		if (Collections.max(scoresList.values()) == 0)
+		{
+			log("No words for this search");
+			return null;
+		}
+			
+		
+		int index = rnd.nextInt(getWordsWithMaxScores(scoresList).size());
+		String wordd = getWordsWithMaxScores(scoresList).get(index);
+	//	Object myKey = scoresList.keySet().toArray()[index];
+		log(wordd);	
+		return wordd;
+	}
+	
+	public void logCoords(ArrayList<int[]> coords)
+	{
+		for (int i = 0; i < coords.size(); i++)
+		{
+			log("cell[" + String.valueOf(coords.get(i)[0]) + "][" + String.valueOf(coords.get(i)[1]) + "]");
+		}
 	}
 }
