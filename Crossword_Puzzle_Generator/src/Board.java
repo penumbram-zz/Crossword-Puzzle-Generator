@@ -179,7 +179,9 @@ public class Board {
 
 		for (int j = 0; j < someList.size(); j++)
 		{
-			cells[someList.get(j)[a]][someList.get(j)[b]] = Character.toString(word.charAt(j));
+			String le = Character.toString(word.charAt(j));
+			cells[someList.get(j)[0]][someList.get(j)[1]] = Character.toString(word.charAt(j));
+			log("Wrote: " + le + " To: " + "cells[" + someList.get(j)[0] + "][" + someList.get(j)[1] + "]");
 		}
 		wordsInBoard.add(word);
 		Dictionary.letterLists.get(someList.size()).remove(word);
@@ -319,7 +321,7 @@ public class Board {
 		
 		for (i = 0; i < paths.size(); i++)
 		{
-			if (paths.get(i).size() == 4)
+			if (paths.get(i).size() == myWidth) //TODO this only accepts 5 letter words as longest, tho there could be more categories
 			{
 				logCoords(paths.get(i));
 				longestPaths.add(paths.get(i));
@@ -421,7 +423,6 @@ public class Board {
 					continue;
 				//log("Vertical cells: " + String.valueOf(range));
 				int score = 0; // initialize score to 0
-				scoresList.clear();
 				for (String a_word : Dictionary.letterLists.get(range+1)) 
 				{
 					if (String.valueOf(a_word.charAt(0)).equalsIgnoreCase(String.valueOf(s.charAt(i))))
@@ -436,11 +437,11 @@ public class Board {
 		//TODO somehow it doesn't add after first word
 		log((Collections.max(scoresList.values())) + " - " + getWordsWithMaxScores(scoresList).toString()); // prints words with highest scores
 		Random rnd = new Random();
-		if (Collections.max(scoresList.values()) == 0)
+	/*	if (Collections.max(scoresList.values()) == 0)
 		{
 			log("No words for this search");
 			return null;
-		}
+		}*/
 			
 		
 		int index = rnd.nextInt(getWordsWithMaxScores(scoresList).size());

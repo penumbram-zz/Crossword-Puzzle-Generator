@@ -6,7 +6,7 @@ public class Main {
 	 */
 	public static void main(String[] args) 
 	{	
-		Board board = new Board(4,4);
+		Board board = new Board(5,5);
 		board.initBoard();
 		board.fillBoardWithFixedBlackCells();
 		board.searchLongestPaths();
