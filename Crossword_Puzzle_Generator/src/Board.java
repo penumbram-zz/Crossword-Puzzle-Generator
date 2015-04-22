@@ -16,6 +16,7 @@ public class Board {
 	int myHeight;
 	ArrayList<String> wordsInBoard = new ArrayList<String>();
 	ArrayList<ArrayList<int[]>> longestPaths = new ArrayList<ArrayList<int[]>>();
+	ArrayList<ArrayList<int[]>> otherPaths = new ArrayList<ArrayList<int[]>>();
 	// Desktop git push check
 	
 	
@@ -221,18 +222,6 @@ public class Board {
 		//placeVerticalWord(wordd,coords);
 	}
 	
-/*	private void placeVerticalWord(String word,ArrayList<int[]> coords)
-	{
-		logCoords(coords);
-		log(word);
-		for (int j = 0; j < coords.size(); j++)
-		{
-			cells[coords.get(j)[1]][coords.get(j)[0]] = Character.toString(word.charAt(j)); //TODO this is reversed for some reason, probably wrong
-		}
-		wordsInBoard.add(word);
-		Dictionary.letterLists.get(coords.size()).remove(word);
-	}
-*/
 	private int wordScore(String word)
 	{
 		for (String w : Dictionary.letterLists.get(word.length()))
@@ -321,10 +310,17 @@ public class Board {
 		
 		for (i = 0; i < paths.size(); i++)
 		{
-			if (paths.get(i).size() == myWidth) //TODO this only accepts 5 letter words as longest, tho there could be more categories
+			if (paths.get(i).size() == myWidth) //TODO this only accepts width/height letter words as longest, tho there could be more categories
 			{
 				logCoords(paths.get(i));
 				longestPaths.add(paths.get(i));
+			}
+			else
+			{
+				if (paths.get(i).size() >= 2)
+				{
+					otherPaths.add(paths.get(i));
+				}
 			}
 		}
 	}
@@ -433,8 +429,12 @@ public class Board {
 				scoresList.put(s, new Integer(score));
 			}
 		}
-	//	log(scoresList.toString());
-		//TODO somehow it doesn't add after first word
+		log(scoresList.toString());
+		if (scoresList.values().isEmpty())
+		{
+			log("This board has no solution as is");
+			return null;
+		}
 		log((Collections.max(scoresList.values())) + " - " + getWordsWithMaxScores(scoresList).toString()); // prints words with highest scores
 		Random rnd = new Random();
 	/*	if (Collections.max(scoresList.values()) == 0)
@@ -442,13 +442,201 @@ public class Board {
 			log("No words for this search");
 			return null;
 		}*/
-			
+		
+		//TODO checkNeighbours(list);
 		
 		int index = rnd.nextInt(getWordsWithMaxScores(scoresList).size());
 		String wordd = getWordsWithMaxScores(scoresList).get(index);
 	//	Object myKey = scoresList.keySet().toArray()[index];
 		log(wordd);	
 		return wordd;
+	}
+	
+	public void fillRestOfWords()
+	{
+		log("-------------");
+		log("-------------");
+		log("-------------");
+		log("other paths: ");
+		for (ArrayList<int[]> path : otherPaths) 
+		{
+			log("path:");
+			log("");
+			logCoords(path);
+			placeWord(path,isVertical(path));
+			printBoard();
+		}
+	}
+	
+	private void checkNeighbours(ArrayList<int[]> list)
+	{
+		ArrayList<ArrayList<int[]>> pathsToCheck = new ArrayList<ArrayList<int[]>>();
+		
+		if (isVertical(list))
+		{
+			for (int[] place : list)
+			{
+				int _x = place[0];
+				int _y = place[1];
+				
+				//ToTheLeft	
+				int xx = _x;
+				int yy = _y;
+						
+				boolean b = true;
+						
+				ArrayList<int[]> path = new ArrayList<int[]>();
+				path.add(place);
+						
+				while(b)
+				{
+					xx--;
+						
+					if (xx > 0 && xx < myWidth)
+					{
+						if (cells[xx][_y] == null && cells[xx][_y] == "X")
+						{
+							b = false;
+							if (path.size() >= 2)
+							{
+								pathsToCheck.add(path);
+							}
+						}
+						else
+						{
+							path.add(newCoordinates(xx, _y));
+						}
+					}
+					else
+					{
+						if (path.size() >= 2)
+						{
+							pathsToCheck.add(path);
+						}
+						b = false;
+					}
+				}			
+					//ToTheLeft
+					//ToTheRight
+					
+				xx = _x;
+				yy = _y;
+					
+				b = true;
+					
+				path = new ArrayList<int[]>();
+				path.add(place);
+					
+				while(b)
+				{
+					xx++;
+						
+					if (xx < myWidth)
+					{
+						if (cells[xx][_y] == null && cells[xx][_y] == "X")
+						{
+							b = false;
+							if (path.size() >= 2)
+							{
+								pathsToCheck.add(path);
+							}
+						}
+						else
+						{
+							path.add(newCoordinates(xx, _y));
+						}
+					}
+					else
+					{
+						if (path.size() >= 2)
+						{
+							pathsToCheck.add(path);
+						}
+						b = false;
+					}
+				}
+					
+				//ToTheRight
+			}
+		}
+		
+		for (ArrayList<int[]> arrayList : pathsToCheck) 
+		{
+			log("Neighbouring Check");
+			logCoords(arrayList);
+			log("Neighbouring Check");
+		}
+		
+		/*
+		
+		
+				
+			//Downwards
+				
+			xx = _x;
+			yy = _y;
+				
+			b = true;
+			
+			path = new ArrayList<int[]>();
+			path.add(place);
+				
+			while(b)
+			{
+				yy++;
+					
+				if (yy < myHeight)
+				{
+					if (cells[_x][yy] == null && cells[_x][yy] == "X")
+					{
+						b = false;
+						if (path.size() >= 2)
+						{
+							pathsToCheck.add(path);
+						}
+					}
+					else
+					{
+						path.add(newCoordinates(_x, yy));
+					}
+				}
+			}
+				
+			//Downwards
+				
+			//Upwards
+				
+			xx = _x;
+			yy = _y;
+				
+			b = true;
+				
+			path = new ArrayList<int[]>();
+			path.add(place);
+				
+			while(b)
+			{
+				yy--;
+					
+				if (yy > 0)
+				{
+					if (cells[_x][yy] == null && cells[_x][yy] == "X")
+					{
+						b = false;
+						if (path.size() >= 2)
+						{
+							pathsToCheck.add(path);
+						}
+					}
+					else
+					{
+						path.add(newCoordinates(_x, yy));
+					}
+				}
+			}
+			//Upwards				
+		}
+		*/
 	}
 	
 	public void logCoords(ArrayList<int[]> coords)

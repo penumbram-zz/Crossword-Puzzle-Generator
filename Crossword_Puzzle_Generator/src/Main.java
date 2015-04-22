@@ -17,6 +17,8 @@ public class Main {
 		Dictionary dict = new Dictionary();
 		dict.fillDictionary();
 		board.fillLongestWords();
+		board.printBoard();
+		board.fillRestOfWords();
 		//dict.printDictionary();
 		//board.fillBoardWithWords();
 		board.printBoard();
