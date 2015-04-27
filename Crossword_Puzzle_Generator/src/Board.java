@@ -409,45 +409,46 @@ public class Board {
 		for (String s : candidateWords)
 		{
 			
+			int[] letter_scores = new int [letters.length];
 			
 			for (int i = 0; i < letters.length; i++)
 			{
-				//logCoords(list);
-				//log("[" + list.get(i)[0] + "][" + list.get(i)[1] + "]");
-				int range = getRange(list.get(i), false);
-				if (range == 1) //skip
-					continue;
-				//log("Vertical cells: " + String.valueOf(range));
+				int range = getRange(list.get(i), !isVertical(list));
 				int score = 0; // initialize score to 0
-				for (String a_word : Dictionary.letterLists.get(range+1)) 
+				if (range == 0) //skip
+					score = 1;
+				else
 				{
-					if (String.valueOf(a_word.charAt(0)).equalsIgnoreCase(String.valueOf(s.charAt(i))))
+					for (String a_word : Dictionary.letterLists.get(range+1)) 
 					{
-						score++;
+						if (String.valueOf(a_word.charAt(0)).equalsIgnoreCase(String.valueOf(s.charAt(i))))
+						{
+							score++;
+						}
 					}
 				}
-				scoresList.put(s, new Integer(score));
+			//	log(String.valueOf(score));
+				letter_scores[i] = score;
 			}
+			
+			int final_score = 1;
+			for (int i = 0; i < letter_scores.length; i++) 
+			{
+				final_score = final_score * letter_scores[i];
+			}
+			scoresList.put(s, new Integer(final_score));
 		}
 		log(scoresList.toString());
-		if (scoresList.values().isEmpty())
+		if (scoresList.values().isEmpty() || Collections.max(scoresList.values()) == 0)
 		{
 			log("This board has no solution as is");
 			return null;
 		}
 		log((Collections.max(scoresList.values())) + " - " + getWordsWithMaxScores(scoresList).toString()); // prints words with highest scores
 		Random rnd = new Random();
-	/*	if (Collections.max(scoresList.values()) == 0)
-		{
-			log("No words for this search");
-			return null;
-		}*/
-		
-		//TODO checkNeighbours(list);
 		
 		int index = rnd.nextInt(getWordsWithMaxScores(scoresList).size());
 		String wordd = getWordsWithMaxScores(scoresList).get(index);
-	//	Object myKey = scoresList.keySet().toArray()[index];
 		log(wordd);	
 		return wordd;
 	}
