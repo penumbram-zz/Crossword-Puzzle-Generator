@@ -17,6 +17,7 @@ public class Board {
 	ArrayList<String> wordsInBoard = new ArrayList<String>();
 	ArrayList<ArrayList<int[]>> longestPaths = new ArrayList<ArrayList<int[]>>();
 	ArrayList<ArrayList<int[]>> otherPaths = new ArrayList<ArrayList<int[]>>();
+	ArrayList<ArrayList<int[]>> allPaths = new ArrayList<ArrayList<int[]>>();
 	// Desktop git push check
 	
 	
@@ -323,6 +324,9 @@ public class Board {
 				}
 			}
 		}
+		
+		allPaths.addAll(longestPaths);
+		allPaths.addAll(otherPaths);
 	}
 	
 	private int[] newCoordinates(int x, int y)
@@ -399,6 +403,7 @@ public class Board {
 				{
 					flag = false;
 				}
+				
 			}
 			if (flag)
 				candidateWords.add(string);
@@ -406,6 +411,7 @@ public class Board {
 		log(candidateWords.toString());
 		
 		HashMap<String, Integer> scoresList = new HashMap<String, Integer>();
+		HashMap<int[], ArrayList<ArrayList<int[]>>> owningPaths = getOwningPaths(list);
 		for (String s : candidateWords)
 		{
 			
@@ -413,7 +419,28 @@ public class Board {
 			
 			for (int i = 0; i < letters.length; i++)
 			{
-				int range = getRange(list.get(i), !isVertical(list));
+				ArrayList<ArrayList<int[]>> temp = owningPaths.get(list.get(i));
+				log("todelete");
+				for (int j = 0; j < temp.size(); j++) 
+				{
+					logCoords(temp.get(j));
+				}
+				log("todelete");
+				int score = 0;
+				//TODO
+				//TODO
+				//TODO
+				//TODO
+				//TODO
+				//TODO
+				for (String a_word : Dictionary.letterLists.get(owningPaths.get(list.get(i)).size()))
+				{
+					if (wordFitsPath(a_word, owningPaths.get(list.get(i)).get(0)) ) {
+						score++;
+					}
+				}
+				letter_scores[i] = score;
+				/*int range = getRange(list.get(i), !isVertical(list));
 				int score = 0; // initialize score to 0
 				if (range == 0) //skip
 					score = 1;
@@ -425,10 +452,10 @@ public class Board {
 						{
 							score++;
 						}
+						
 					}
 				}
-			//	log(String.valueOf(score));
-				letter_scores[i] = score;
+				*/
 			}
 			
 			int final_score = 1;
@@ -453,6 +480,67 @@ public class Board {
 		return wordd;
 	}
 	
+	private boolean wordFitsPath(String word, ArrayList<int[]> path)
+	{
+		boolean flag = true;
+		for (int i = 0; i < path.size(); i++)
+		{
+			String tile = cells[path.get(i)[0]][path.get(i)[1]];
+			if (tile.equalsIgnoreCase(" ") || tile.equalsIgnoreCase(String.valueOf(word.charAt(i))))
+			{
+				flag = true;
+			}
+			else
+			{
+				flag = false;
+			}
+		}
+		return flag;
+	}
+	
+	private HashMap<int[], ArrayList<ArrayList<int[]>>> getOwningPaths(ArrayList<int[]> list)
+	{
+		HashMap<int[], ArrayList<ArrayList<int[]>>> hMap = new HashMap<int[], ArrayList<ArrayList<int[]>>>();
+		
+		for (int[] ls : list)
+		{
+			ArrayList<ArrayList<int[]>> owningPaths = new ArrayList<ArrayList<int[]>>();
+			for (int i = 0; i < allPaths.size(); i++)
+			{
+				for (int j = 0; j < allPaths.get(i).size(); j++)
+				{
+					if (allPaths.get(i).get(j)[0] == ls[0] && allPaths.get(i).get(j)[1] == ls[1])
+					{
+						//log("tile is contained by path: ");
+						//logCoords(allPaths.get(i));
+						if (allPaths.get(i) != list)
+						{
+							owningPaths.add(allPaths.get(i));
+						}
+					}
+				}
+			}
+			hMap.put(ls, owningPaths);
+		}
+		for (int[] ls : list)
+		{
+			ArrayList<ArrayList<int[]>> temp = hMap.get(ls);
+			for (ArrayList<int[]> arrayList : temp) {
+				logCoords(arrayList);
+			}
+		}
+		
+		log("LIST OF OWNING PATHS OF");
+		logCoords(list);
+		log("IS AS FOLLOWS: ");
+		/*for (int i = 0; i < owningPaths.size(); i++)
+		{
+			logCoords(owningPaths.get(i));
+			log("---");
+		}*/
+		return hMap;
+		//return owningPaths;
+	}
 	public void fillRestOfWords()
 	{
 		log("-------------");
