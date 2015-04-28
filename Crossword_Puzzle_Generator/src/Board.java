@@ -3,6 +3,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Random;
@@ -64,6 +65,20 @@ public class Board {
 		for (int i = 1; i < myWidth-1; i++) 
 		{
 			cells[i][i] = "X";
+		}
+	}
+	
+	public void fillEmptyCellsWithBlackCells()
+	{
+		for (int i = 0; i < myHeight; i++)
+		{
+			for (int j = 0; j <myWidth; j++) 
+			{
+					if (cells[j][i] == " ")
+					{
+						cells[j][i] = "X";
+					}
+			}
 		}
 	}
 	
@@ -324,6 +339,16 @@ public class Board {
 				}
 			}
 		}
+		Collections.sort(longestPaths, new Comparator<ArrayList>(){
+		    public int compare(ArrayList a1, ArrayList a2) {
+		        return a2.size() - a1.size(); // assumes you want biggest to smallest
+		    }
+		});
+		Collections.sort(otherPaths, new Comparator<ArrayList>(){
+		    public int compare(ArrayList a1, ArrayList a2) {
+		        return a2.size() - a1.size(); // assumes you want biggest to smallest
+		    }
+		});
 		
 		allPaths.addAll(longestPaths);
 		allPaths.addAll(otherPaths);
@@ -372,7 +397,6 @@ public class Board {
 	
 	private String selectWordForPath(ArrayList<int[]> list)
 	{
-		boolean todelete = false;
 		log("Selecting Word For Path: ");
 		logCoords(list);
 	//	ArrayList<Integer> fullCells = new ArrayList<Integer>();
@@ -387,7 +411,6 @@ public class Board {
 			else
 			{
 				log("full cell");
-				todelete = true;
 				letters[i] = cells[list.get(i)[0]][list.get(i)[1]];
 			}
 		}
@@ -417,11 +440,11 @@ public class Board {
 		for (String s : candidateWords)
 		{
 			
-			int[] letter_scores = new int [letters.length];
-			if (letters.length == 3 && todelete)
+			double[] letter_scores = new double [letters.length];
+		/*	if (letters.length == 3 && todelete)
 			{
 				log("lets check it");
-			}
+			}*/
 			for (int i = 0; i < letters.length; i++)
 			{
 				ArrayList<ArrayList<int[]>> temp = owningPaths.get(list.get(i));
@@ -465,34 +488,18 @@ public class Board {
 				}
 				letter_scores[i] = score;
 			}
-				
-				
-				//DELETE
-				/*
-				int range = getRange(list.get(i), !isVertical(list));
-				int score = 0; // initialize score to 0
-				if (range == 0) //skip
-					score = 1;
-				else
-				{
-					for (String a_word : Dictionary.letterLists.get(range+1)) 
-					{
-						if (String.valueOf(a_word.charAt(0)).equalsIgnoreCase(String.valueOf(s.charAt(i))))
-						{
-							score++;
-						}
-						
-					}
-				}
-				*/
-
+			//NEW
+			Statistics statistics = new Statistics(letter_scores);
+			double variance = statistics.getVariance();
 			
-			int final_score = 1;
+			double final_score = 1;
 			for (int i = 0; i < letter_scores.length; i++) 
 			{
 				final_score = final_score * letter_scores[i];
 			}
-			scoresList.put(s, new Integer(final_score));
+			final_score /= (variance + 1);
+			// NEW
+			scoresList.put(s, new Integer((int)final_score));
 		}
 		log(scoresList.toString());
 		if (scoresList.values().isEmpty() || Collections.max(scoresList.values()) == 0)

@@ -1,3 +1,5 @@
+import java.util.logging.Logger;
+
 
 public class Main {
 
@@ -6,7 +8,10 @@ public class Main {
 	 */
 	public static void main(String[] args) 
 	{	
-		Board board = new Board(5,5);
+		
+		
+		
+		Board board = new Board(8,8);
 		board.initBoard();
 		board.fillBoardWithFixedBlackCells();
 		board.searchLongestPaths();
@@ -19,8 +24,7 @@ public class Main {
 		board.fillLongestWords();
 		board.printBoard();
 		board.fillRestOfWords();
-		//dict.printDictionary();
-		//board.fillBoardWithWords();
+		board.fillEmptyCellsWithBlackCells();
 		board.printBoard();
 	}
 }

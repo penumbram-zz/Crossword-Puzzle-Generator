@@ -59,43 +59,6 @@ public class Dictionary
 		        	letterLists.get(line.length()).add(line);
 		        else
 		        	letterLists.get(0).add(line);
-		        
-		        
-		    /*    switch (line.length()) {
-				case 1:
-					_1_letters.add(line);
-					break;
-				case 2:
-					_2_letters.add(line);
-					break;
-				case 3:
-					_3_letters.add(line);
-					break;
-				case 4:
-					_4_letters.add(line);
-					break;
-				case 5:
-					_5_letters.add(line);
-					break;
-				case 6:
-					_6_letters.add(line);
-					break;
-				case 7:
-					_7_letters.add(line);
-					break;
-				case 8:
-					_8_letters.add(line);
-					break;
-				case 9:
-					_9_letters.add(line);
-					break;
-				case 10:
-					_10_letters.add(line);
-					break;	
-				default:
-					_other_letters.add(line);
-					break;
-				}*/
 		    }
 		}
 		catch (Exception e) 
