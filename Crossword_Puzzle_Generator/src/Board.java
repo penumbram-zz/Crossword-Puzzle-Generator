@@ -62,10 +62,9 @@ public class Board {
 	
 	public void fillBoardWithFixedBlackCells()
 	{
-		for (int i = 1; i < myWidth-1; i++) 
-		{
-			cells[i][i] = "X";
-		}
+		BlackCellGenerator bcg = new BlackCellGenerator(this.cells);
+		bcg.diagonal(false);
+		bcg.diagonal(true);
 	}
 	
 	public void fillEmptyCellsWithBlackCells()

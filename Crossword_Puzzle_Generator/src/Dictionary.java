@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 
 public class Dictionary 
@@ -18,6 +19,8 @@ public class Dictionary
 	ArrayList<String> _10_letters;
 	ArrayList<String> _other_letters;
 	static ArrayList<ArrayList<String>> letterLists;
+	
+	String alphabet = "abcdefghijklmnopqrstuvwxyz";
 	
 	public Dictionary()
 	{
@@ -65,6 +68,18 @@ public class Dictionary
 		{
 			e.printStackTrace();
 		}
+		ArrayList<String> all_two_letter_combinations = new ArrayList<String>();
+		for (int i = 0; i < alphabet.length(); i++)
+		{
+			String temp = String.valueOf(alphabet.charAt(i));
+			for (int j = 0; j < alphabet.length(); j++)
+			{
+				String temp2 = String.valueOf(alphabet.charAt(j));
+				String concat = temp + temp2;
+				all_two_letter_combinations.add(concat);
+			}
+		}
+		letterLists.get(2).addAll(all_two_letter_combinations);
 	}
 	
 	public void printDictionary()

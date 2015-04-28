@@ -639,6 +639,7 @@ abysms
 abyss
 abyssal
 abysses
+ac
 acacia
 acacias
 academe
@@ -2355,6 +2356,7 @@ aetheric
 aethers
 aetiologies
 aetiology
+af
 afar
 afars
 afeard
@@ -3185,6 +3187,7 @@ aitches
 aits
 aiver
 aivers
+aj
 ajar
 ajee
 ajiva
@@ -3193,6 +3196,7 @@ ajowan
 ajowans
 ajuga
 ajugas
+ak
 akee
 akees
 akela
@@ -6806,6 +6810,7 @@ anyways
 anywhere
 anywheres
 anywise
+ao
 aorist
 aoristic
 aoristically
@@ -6820,6 +6825,7 @@ aortographies
 aortography
 aoudad
 aoudads
+ap
 apace
 apache
 apaches
