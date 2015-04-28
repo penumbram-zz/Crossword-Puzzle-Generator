@@ -343,6 +343,7 @@ public class Board {
 		{
 			ArrayList<int[]> pathToFill = longestPaths.get(i);
 			placeWord(pathToFill,isVertical(pathToFill));
+			printBoard();
 		}
 	}
 	
@@ -371,6 +372,7 @@ public class Board {
 	
 	private String selectWordForPath(ArrayList<int[]> list)
 	{
+		boolean todelete = false;
 		log("Selecting Word For Path: ");
 		logCoords(list);
 	//	ArrayList<Integer> fullCells = new ArrayList<Integer>();
@@ -385,8 +387,8 @@ public class Board {
 			else
 			{
 				log("full cell");
+				todelete = true;
 				letters[i] = cells[list.get(i)[0]][list.get(i)[1]];
-		//		fullCells.add(i);
 			}
 		}
 		
@@ -416,31 +418,58 @@ public class Board {
 		{
 			
 			int[] letter_scores = new int [letters.length];
-			
+			if (letters.length == 3 && todelete)
+			{
+				log("lets check it");
+			}
 			for (int i = 0; i < letters.length; i++)
 			{
 				ArrayList<ArrayList<int[]>> temp = owningPaths.get(list.get(i));
+				/*
 				log("todelete");
 				for (int j = 0; j < temp.size(); j++) 
 				{
 					logCoords(temp.get(j));
 				}
 				log("todelete");
+				*/
+				//DELETE
 				int score = 0;
-				//TODO
-				//TODO
-				//TODO
-				//TODO
-				//TODO
-				//TODO
-				for (String a_word : Dictionary.letterLists.get(owningPaths.get(list.get(i)).size()))
+				
+				
+		
+				if (temp.size() > 0)
 				{
-					if (wordFitsPath(a_word, owningPaths.get(list.get(i)).get(0)) ) {
-						score++;
+					int intersection = intersectionPoint(list, temp.get(0));
+					int _size = temp.get(0).size();
+					//log(String.valueOf(_size));
+					for (String a_word : Dictionary.letterLists.get(_size))
+					{
+						if (wordFitsPath(a_word, owningPaths.get(list.get(i)).get(0))) 
+						{
+							if (String.valueOf(s.charAt(i)).equalsIgnoreCase(String.valueOf(a_word.charAt(intersection))) )
+							{
+								score++;
+							}
+						}
+						else if (isPathFull(owningPaths.get(list.get(i)).get(0)))
+						{
+							score = 1;
+							break;
+						}
 					}
 				}
+				else
+				{
+					score = 1;
+				}
 				letter_scores[i] = score;
-				/*int range = getRange(list.get(i), !isVertical(list));
+			}
+				
+				
+				//DELETE
+				/*
+				int range = getRange(list.get(i), !isVertical(list));
 				int score = 0; // initialize score to 0
 				if (range == 0) //skip
 					score = 1;
@@ -456,7 +485,7 @@ public class Board {
 					}
 				}
 				*/
-			}
+
 			
 			int final_score = 1;
 			for (int i = 0; i < letter_scores.length; i++) 
@@ -480,6 +509,24 @@ public class Board {
 		return wordd;
 	}
 	
+	private int intersectionPoint(ArrayList<int[]> owner,ArrayList<int[]> crosser)
+	{
+		for (int i = 0; i < owner.size(); i++)
+		{
+			int[] temp = owner.get(i);
+			for (int j = 0; j < crosser.size(); j++)
+			{
+				int[] temp2 = crosser.get(j);
+				
+				if (temp[0] == temp2[0] && temp[1] == temp2[1])
+				{
+					return j;
+				}
+			}
+		}
+		return 0;
+	}
+	
 	private boolean wordFitsPath(String word, ArrayList<int[]> path)
 	{
 		boolean flag = true;
@@ -487,12 +534,26 @@ public class Board {
 		{
 			String tile = cells[path.get(i)[0]][path.get(i)[1]];
 			if (tile.equalsIgnoreCase(" ") || tile.equalsIgnoreCase(String.valueOf(word.charAt(i))))
-			{
-				flag = true;
-			}
+				;
 			else
 			{
 				flag = false;
+				break;
+			}
+		}
+		return flag;
+	}
+	
+	private boolean isPathFull(ArrayList<int[]> path)
+	{
+		boolean flag = true;
+		for (int i = 0; i < path.size(); i++)
+		{
+			String tile = cells[path.get(i)[0]][path.get(i)[1]];
+			if (tile == " ")
+			{
+				flag = false;
+				break;
 			}
 		}
 		return flag;
