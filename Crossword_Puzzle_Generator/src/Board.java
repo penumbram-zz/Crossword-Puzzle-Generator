@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 
 public class Board {
 	
-	String[][] cells;
+	public String[][] cells;
 	int myWidth;
 	int myHeight;
 	ArrayList<String> wordsInBoard = new ArrayList<String>();
@@ -64,7 +64,6 @@ public class Board {
 	{
 		BlackCellGenerator bcg = new BlackCellGenerator(this.cells);
 		bcg.diagonal(false);
-		bcg.diagonal(true);
 	}
 	
 	public void fillEmptyCellsWithBlackCells()

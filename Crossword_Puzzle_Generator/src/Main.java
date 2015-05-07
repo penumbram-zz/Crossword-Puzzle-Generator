@@ -1,4 +1,7 @@
+import java.awt.EventQueue;
 import java.util.logging.Logger;
+
+import UserInterface.MainFrame;
 
 
 public class Main {
@@ -9,11 +12,19 @@ public class Main {
 	public static void main(String[] args) 
 	{	
 		
+		MainFrame mainFrame = new MainFrame();
+        mainFrame.setVisible(true);
 		
 		
-		Board board = new Board(8,8);
+		Board board = new Board(10,10);
 		board.initBoard();
 		board.fillBoardWithFixedBlackCells();
+		mainFrame.boardFrame.boardPanel.setBoard(board.cells);
+		
+		boolean b = true;
+		if (b)
+			return;
+		
 		board.searchLongestPaths();
 		
 		board.printBoard();
