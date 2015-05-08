@@ -2,6 +2,7 @@ package Generator;
 
 
 
+
 public class BlackCellGenerator 
 {
 	String[][] cells;

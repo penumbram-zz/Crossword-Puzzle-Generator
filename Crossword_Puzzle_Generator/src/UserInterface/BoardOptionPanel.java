@@ -25,5 +25,6 @@ public class BoardOptionPanel extends JPanel
 		//bp.setBounds(400, 400, 50, 50);
 		bp.setVisible(true);
 		setVisible(true);
+		
 	}
 }
