@@ -1,31 +1,34 @@
 package UserInterface;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 
 import javax.swing.JPanel;
 
 public class BoardPanel extends JPanel 
 {
-	public BoardPanel()
+	private int tileWidth;
+	private int tileHeight;
+	
+	public BoardPanel(int width,int height,int row, int column,int tileWidth, int tileHeight,int x,int y)
 	{
-		setSize(500, 500);
+		this.tileWidth = tileWidth;
+		this.tileHeight = tileHeight;
+		setPreferredSize(new Dimension(width, height));
 		setBackground(Color.RED);
-		setBounds(230, 20, 500, 500);
-		setLayout(new GridLayout(10, 10));
-		
-		
-		
+		setBounds(x, y, width,height);
+		setLayout(new GridLayout(row, column));
 	}
 	
 	public void setBoard(String[][] cellz)
     {
 		printBoard(cellz);
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < cellz.length; i++)
 		{
-			for (int j = 0; j < 10; j++) 
+			for (int j = 0; j < cellz.length; j++) 
 			{
-				BoardTile boardTile = new BoardTile();
+				BoardTile boardTile = new BoardTile(tileWidth,tileHeight);
 				if (cellz[i][j] == "X")
 					boardTile.setBackground(Color.BLACK);
 				else

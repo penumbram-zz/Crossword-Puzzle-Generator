@@ -1,3 +1,6 @@
+package Generator;
+
+
 import java.awt.EventQueue;
 import java.util.logging.Logger;
 
@@ -17,10 +20,10 @@ public class Main {
 		
 		
 		Board board = new Board(10,10);
-		board.initBoard();
+		/*board.initBoard();
 		board.fillBoardWithFixedBlackCells();
 		mainFrame.boardFrame.boardPanel.setBoard(board.cells);
-		
+		*/
 		boolean b = true;
 		if (b)
 			return;

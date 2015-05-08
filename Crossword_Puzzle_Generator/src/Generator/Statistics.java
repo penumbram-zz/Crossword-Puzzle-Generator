@@ -1,3 +1,6 @@
+package Generator;
+
+
 import java.util.Arrays;
 
 public class Statistics 

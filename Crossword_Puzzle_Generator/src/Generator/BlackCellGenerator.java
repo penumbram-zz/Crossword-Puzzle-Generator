@@ -1,3 +1,6 @@
+package Generator;
+
+
 
 public class BlackCellGenerator 
 {

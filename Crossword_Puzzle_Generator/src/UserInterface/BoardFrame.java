@@ -30,7 +30,7 @@ public class BoardFrame extends JFrame {
         setOpacity(0f);
         getContentPane().setBackground(Color.GRAY);
         
-		boardPanel = new BoardPanel();
+		//boardPanel = new BoardPanel(500,500,10,10,50,50);
 		boardSelectionPanel = new BoardSelectionPanel();
 		add(boardSelectionPanel);
 		//add(boardPanel);

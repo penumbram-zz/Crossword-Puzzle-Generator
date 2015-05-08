@@ -19,13 +19,15 @@ public class BoardSelectionPanel extends JPanel
 		BoardOptionPanel boardOptionPanel = new BoardOptionPanel();
 		boardOptionPanel.setPreferredSize(new Dimension(200,200));
 		add(boardOptionPanel);
-		
+		setVisible(true);
 		springLayout.putConstraint(SpringLayout.WEST, boardOptionPanel,
-                50,
+                30,
                 SpringLayout.WEST, this);
 		springLayout.putConstraint(SpringLayout.NORTH, boardOptionPanel,
-                50,
+                30,
                 SpringLayout.NORTH, this);
+		
+		
 		
 	}
 }
