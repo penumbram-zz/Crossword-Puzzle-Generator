@@ -50,18 +50,17 @@ public class Board {
 		}
 	}
 	
-	public void printBoard()
+	public static void printBoard(String[][] _cells)
 	{
-		System.out.println(wordsInBoard);
-		System.out.println();
-		log(String.valueOf(cells.length));
-		for (int i = 0; i < myHeight; i++)
+		System.out.println("----BOARD----");
+		for (int i = 0; i < _cells.length; i++)
 		{
 			System.out.print("|");
-			for (int j = 0; j < myWidth; j++) 
-				System.out.print(cells[j][i] + "|");
+			for (int j = 0; j < _cells.length; j++) 
+				System.out.print(_cells[i][j] + "|");
 			System.out.println();
 		}
+		System.out.println("--BOARD END--");
 	}
 	
 	public void fillBoardWithFixedBlackCells()
@@ -370,7 +369,8 @@ public class Board {
 		{
 			ArrayList<int[]> pathToFill = longestPaths.get(i);
 			placeWord(pathToFill,isVertical(pathToFill));
-			printBoard();
+			System.out.println(wordsInBoard);
+			printBoard(cells);
 		}
 	}
 	
@@ -623,7 +623,8 @@ public class Board {
 			log("");
 			logCoords(path);
 			placeWord(path,isVertical(path));
-			printBoard();
+			System.out.println(wordsInBoard);
+			printBoard(cells);
 		}
 	}
 	

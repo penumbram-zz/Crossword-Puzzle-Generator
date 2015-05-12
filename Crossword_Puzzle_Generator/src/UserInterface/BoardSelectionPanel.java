@@ -17,14 +17,13 @@ public class BoardSelectionPanel extends JPanel
 		setLayout(springLayout);
 		
 		BoardOptionPanel boardOptionPanel = new BoardOptionPanel();
-		boardOptionPanel.setPreferredSize(new Dimension(200,200));
 		add(boardOptionPanel);
 		setVisible(true);
 		springLayout.putConstraint(SpringLayout.WEST, boardOptionPanel,
-                30,
+                0,
                 SpringLayout.WEST, this);
 		springLayout.putConstraint(SpringLayout.NORTH, boardOptionPanel,
-                30,
+                0,
                 SpringLayout.NORTH, this);
 		
 		
