@@ -86,6 +86,47 @@ public class MainFrame extends JFrame
 	             }
 			});
 	        
+	        
+	        
+	        final Button editButton = new Button(getImage("resources/images/defter.png",195,70),getImage("resources/images/defter_glow.png",195,70));
+	        add(editButton);
+	        editButton.setBounds(0, 220, 195, 70);	
+	        
+	        editButton.addActionListener(new ActionListener()
+	        {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stuff
+				System.out.println("button clicked");
+				
+				timer.cancel(); //this will cancel the current task. if there is no active task, nothing happens
+			    timer = new Timer();
+
+			    TimerTask action = new TimerTask() {
+			        public void run() {
+			            boardFrame.setVisible(true);
+			            System.out.println("timertask worked");
+			        }
+
+			    };
+
+			    timer.schedule(action, 1000); //this starts the task
+			}
+	        });
+	        editButton.addMouseListener(new MouseAdapter() {
+	        	 @Override
+				public void mouseExited(MouseEvent e) {
+					super.mouseExited(e);
+					deglowButton(editButton);
+				}
+
+				@Override
+	             public void mouseEntered(MouseEvent e) {
+					super.mouseEntered(e);
+	                glowButton(editButton);
+	             }
+			});
+	        
 	    }
 	    
 	    public static BufferedImage getImage(String imageLocation,int width,int height)

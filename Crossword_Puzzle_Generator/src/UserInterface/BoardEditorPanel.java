@@ -4,6 +4,17 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.Writer;
 
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
@@ -14,6 +25,8 @@ import javax.swing.SpringLayout;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import Utility.FileUtils;
+import Utility.Singleton;
 import Generator.Board;
 import Generator.Main;
 
@@ -32,7 +45,8 @@ public class BoardEditorPanel extends JPanel
 		setLayout(springLayout);
 		
 		bp = new BoardPanel(400,400,5,5,100,100,0,0);
-		String[][] cellz = Main.boards.get(0);
+		String[][] cellz = Singleton.getInstance().boards.get(0);
+		
 		Board.printBoard(cellz);
 		bp.setBoard(cellz);
 		bp.setClickable(true);
@@ -57,7 +71,7 @@ public class BoardEditorPanel extends JPanel
 							savetiles[i][j] = "X";
 					}
 				}
-				Board.printBoard(savetiles);
+				saveBoardToFile(savetiles);
 			}
 		});
 		
@@ -113,6 +127,84 @@ public class BoardEditorPanel extends JPanel
      	bp.repaint();
 	 }
 	 
+	 private void saveBoardToFile(String[][] aBoard)
+	 {
+		 int newBoardNumber = -1;
+		 	try {
+				newBoardNumber = removeLineFromFile("resources/board templates/boards.txt", "0");
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			String boardString = Board.convertBoardToString(aBoard);
+			if (newBoardNumber == -1)
+				return;
+			
+			try {
+				Writer output = new BufferedWriter(new FileWriter("resources/board templates/boards.txt", true));
+				output.append(String.valueOf(newBoardNumber+1) + "\n");
+				output.append(boardString);
+				output.append("0");
+				output.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	 }
 	 
-	 
+	 public int removeLineFromFile(String file, String lineToRemove) {
+		 int _return = -1;
+		    try {
+		 
+		      File inFile = new File(file);
+		      
+		      if (!inFile.isFile()) {
+		        System.out.println("Parameter is not an existing file");
+		        return _return;
+		      }
+		       
+		      //Construct the new file that will later be renamed to the original filename. 
+		      File tempFile = new File(inFile.getAbsolutePath() + ".tmp");
+		      
+		      BufferedReader br = new BufferedReader(new FileReader(file));
+		      PrintWriter pw = new PrintWriter(new FileWriter(tempFile));
+		      
+		      String line = null;
+		 
+		      //Read from the original file and write to the new 
+		      //unless content matches data to be removed.
+		      while ((line = br.readLine()) != null) {
+		        
+		        if (!line.trim().equals(lineToRemove)) 
+		        {
+		        	if (FileUtils.isNumeric(line))
+		        	{
+		        		_return = Integer.valueOf(line).intValue();
+					}
+		          pw.println(line);
+		          pw.flush();
+		        }
+		      }
+		      pw.close();
+		      br.close();
+		      
+		      //Delete the original file
+		      if (!inFile.delete()) {
+		        System.out.println("Could not delete file");
+		        return _return;
+		      } 
+		      
+		      //Rename the new file to the filename the original file had.
+		      if (!tempFile.renameTo(inFile))
+		        System.out.println("Could not rename file");
+		      
+		    }
+		    catch (FileNotFoundException ex) {
+		      ex.printStackTrace();
+		    }
+		    catch (IOException ex) {
+		      ex.printStackTrace();
+		    }
+		    return _return;
+		  }
 }

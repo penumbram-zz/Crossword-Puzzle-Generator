@@ -30,14 +30,12 @@ public class BoardPanel extends JPanel
 	public void setBoard(String[][] cellz)
     {
 		tiles = new BoardTile[cellz.length][cellz.length];
-		System.out.println("yoyoyoyo");
 		Board.printBoard(cellz);
 		for (int i = 0; i < cellz.length; i++)
 		{
 			for (int j = 0; j < cellz.length; j++) 
 			{
 				BoardTile boardTile = new BoardTile(tileWidth,tileHeight);
-				System.out.println(cellz[i][j]);
 				if (cellz[i][j].equalsIgnoreCase("X"))
 					boardTile.setBackground(Color.BLACK);
 				else

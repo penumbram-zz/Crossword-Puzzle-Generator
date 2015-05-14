@@ -6,6 +6,9 @@ import java.awt.Dimension;
 import javax.swing.JPanel;
 import javax.swing.SpringLayout;
 
+import Generator.Board;
+import Utility.Singleton;
+
 public class BoardSelectionPanel extends JPanel 
 {
 	public BoardSelectionPanel()
@@ -16,17 +19,17 @@ public class BoardSelectionPanel extends JPanel
 		SpringLayout springLayout = new SpringLayout();
 		setLayout(springLayout);
 		
+		
+		
 		BoardOptionPanel boardOptionPanel = new BoardOptionPanel();
 		add(boardOptionPanel);
-		setVisible(true);
-		springLayout.putConstraint(SpringLayout.WEST, boardOptionPanel,
-                0,
-                SpringLayout.WEST, this);
-		springLayout.putConstraint(SpringLayout.NORTH, boardOptionPanel,
-                0,
-                SpringLayout.NORTH, this);
 		
-		
+		springLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, boardOptionPanel,
+                0,
+                SpringLayout.HORIZONTAL_CENTER, this);
+		springLayout.putConstraint(SpringLayout.VERTICAL_CENTER, boardOptionPanel,
+                0,
+                SpringLayout.VERTICAL_CENTER, this);
 		
 	}
 }

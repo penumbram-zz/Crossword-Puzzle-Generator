@@ -63,6 +63,19 @@ public class Board {
 		System.out.println("--BOARD END--");
 	}
 	
+	public static String convertBoardToString(String[][] _cells)
+	{
+		String _final = "";
+		for (int i = 0; i < _cells.length; i++)
+		{
+			_final += "|";
+			for (int j = 0; j < _cells.length; j++) 
+				_final += _cells[i][j] + "|";
+			_final += "\n";
+		}
+		return _final;
+	}
+	
 	public void fillBoardWithFixedBlackCells()
 	{
 		BlackCellGenerator bcg = new BlackCellGenerator(this.cells);

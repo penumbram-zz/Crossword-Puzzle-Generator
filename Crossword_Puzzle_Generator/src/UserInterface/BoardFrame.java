@@ -34,9 +34,9 @@ public class BoardFrame extends JFrame {
         BufferedImage backgroundImage = MainFrame.getImage("resources/images/office_bg.png", 960,540);
         setContentPane(new ImagePanel(backgroundImage));
 		//boardPanel = new BoardPanel(500,500,10,10,50,50);
-		//boardSelectionPanel = new BoardSelectionPanel();
-        boardEditorPanel = new BoardEditorPanel();
-		add(boardEditorPanel);
+		boardSelectionPanel = new BoardSelectionPanel();
+        //boardEditorPanel = new BoardEditorPanel();
+		add(boardSelectionPanel);
 		//add(boardPanel);
         
         
