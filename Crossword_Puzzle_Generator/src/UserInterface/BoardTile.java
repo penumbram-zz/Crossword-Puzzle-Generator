@@ -2,17 +2,25 @@ package UserInterface;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class BoardTile extends JPanel implements MouseListener
+import org.pushingpixels.trident.Timeline;
+
+import Utility.Utils;
+
+public class BoardTile extends FadingPanel implements MouseListener
 {
 	Color myColor;
 	Boolean clickable = false;
+	JLabel label = new JLabel("");
 	public BoardTile(int width,int height)
 	{
 		setSize(width,height);
@@ -20,8 +28,11 @@ public class BoardTile extends JPanel implements MouseListener
 		setBorder(BorderFactory.createMatteBorder(1,1,1,1, Color.BLACK));
         setVisible(true);
         addMouseListener(this);
+        
+        add(label);
+        label.setFont(new Font("Verdana", Font.BOLD, width/3));
+        label.setForeground(Color.BLACK);
 	}
-	
 	public Color getColor()
 	{
 		return myColor;

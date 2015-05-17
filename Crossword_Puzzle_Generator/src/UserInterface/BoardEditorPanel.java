@@ -15,7 +15,9 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JSpinner.DefaultEditor;
@@ -27,6 +29,7 @@ import javax.swing.event.ChangeListener;
 
 import Utility.FileUtils;
 import Utility.Singleton;
+import Utility.Utils;
 import Generator.Board;
 import Generator.Main;
 
@@ -35,6 +38,9 @@ public class BoardEditorPanel extends JPanel
 	SpringLayout springLayout;
 	private BoardPanel bp;
 	BoardEditorPanel boardEditorPanel;
+	Button buttonSave;
+	JSpinner spinner;
+	Button buttonGo;
 	
 	public BoardEditorPanel()
 	{
@@ -54,7 +60,7 @@ public class BoardEditorPanel extends JPanel
 		bp.setVisible(true);
 		setVisible(true);
 		
-		Button buttonSave = new Button(null);
+		buttonSave = new Button(null);
 		buttonSave.setText("Save");
 		add(buttonSave);
 		buttonSave.setPreferredSize(new Dimension(100, 30));
@@ -75,7 +81,47 @@ public class BoardEditorPanel extends JPanel
 			}
 		});
 		
-		JSpinner spinner = getSpinnerDemo();
+		buttonGo = new Button(null);
+		buttonGo.setText("Go");
+		add(buttonGo);
+		buttonGo.setPreferredSize(new Dimension(100, 30));
+		buttonGo.addActionListener(new ActionListener() 
+		{	
+			@Override
+			public void actionPerformed(ActionEvent e) 
+			{
+				
+				String[][] finaltiles = new String[bp.tiles.length][bp.tiles.length];
+				for (int i = 0; i < finaltiles.length; i++) {
+					for (int j = 0; j < finaltiles.length; j++) {
+						if (bp.tiles[i][j].getColor() == Color.WHITE)
+							finaltiles[i][j] = " ";
+						else
+							finaltiles[i][j] = "X";
+					}
+				}
+				Utils.logg("Go");
+				Utils.logg("Go");
+				Utils.logg("Go");
+				Board board = new Board(finaltiles.length,finaltiles.length);
+				board.cells = finaltiles;
+				board.searchLongestPaths();
+				for (ArrayList<int[]> path : board.allPaths) 
+				{
+					if (path.size() > 10)
+					{
+						JOptionPane.showMessageDialog(null, "Board contains at least 1 path that is longer than 10 letters");
+						return;
+					}
+				}
+				Board.printBoard(finaltiles);
+				generator(finaltiles);
+				
+				//saveBoardToFile(savetiles);
+			}
+		});
+		
+		spinner = getSpinnerDemo();
 		add(spinner);
 		
 		springLayout.putConstraint(SpringLayout.WEST, buttonSave, 100, SpringLayout.WEST, this);
@@ -87,6 +133,14 @@ public class BoardEditorPanel extends JPanel
 		springLayout.putConstraint(SpringLayout.VERTICAL_CENTER, spinner, 0, SpringLayout.VERTICAL_CENTER, buttonSave);
 		boardEditorPanel = this;
 	}
+	
+	private void generator(String[][] cells)
+	{
+		setVisible(false);
+		Singleton.getInstance().boardFrame.remove(this);
+		Singleton.getInstance().boardFrame.add(new BoardGeneratorPanel(cells));
+	}
+
 	
 	private void setBoardPosition()
 	{
@@ -118,6 +172,42 @@ public class BoardEditorPanel extends JPanel
      	Board b = new Board(val, val);
      	b.initBoard();
      	bp.setBoard(b.cells);
+  		bp.setClickable(true);
+  		add(bp);
+  		setBoardPosition();
+  		validate();
+     	repaint();
+     	bp.validate();
+     	bp.repaint();
+	 }
+	 
+	 public void editNewBoard()
+	 {
+		spinner.setVisible(true);
+		buttonSave.setVisible(true);
+		remove(bp);
+     	bp = new BoardPanel(400, 400, 5, 5, 40, 40, 50, 50);
+     	Board b = new Board(5, 5);
+     	b.initBoard();
+     	bp.setBoard(b.cells);
+  		bp.setClickable(true);
+  		add(bp);
+  		setBoardPosition();
+  		validate();
+     	repaint();
+     	bp.validate();
+     	bp.repaint();
+	 }
+	 
+	 public void editSelectedBoard(String[][] cells)
+	 {
+		spinner.setVisible(false);
+		buttonSave.setVisible(false);
+		remove(bp);
+     	bp = new BoardPanel(400, 400, cells.length, cells.length, 40, 40, 50, 50);
+     	Board b = new Board(cells.length, cells.length);
+     	b.initBoard();
+     	bp.setBoard(cells);
   		bp.setClickable(true);
   		add(bp);
   		setBoardPosition();

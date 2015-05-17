@@ -2,10 +2,13 @@ package Utility;
 
 import java.util.ArrayList;
 
+import UserInterface.BoardFrame;
+
 public class Singleton {
 	
 	   private static Singleton singleton = new Singleton( );
 	   public ArrayList<String[][]> boards;
+	   public BoardFrame boardFrame;
 	   /* A private Constructor prevents any other 
 	    * class from instantiating.
 	    */

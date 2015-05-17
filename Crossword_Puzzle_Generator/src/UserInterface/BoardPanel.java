@@ -2,35 +2,41 @@ package UserInterface;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
+import org.pushingpixels.trident.Timeline;
+
+import Utility.Utils;
 import Generator.Board;
 
-public class BoardPanel extends JPanel 
+public class BoardPanel extends FadingPanel 
 {
 	private int tileWidth;
 	private int tileHeight;
-	BoardTile[][] tiles;
+	public BoardTile[][] tiles;
 	
 	public BoardPanel(int width,int height,int row, int column,int tileWidth, int tileHeight,int x,int y)
 	{
 		this.tileWidth = tileWidth;
 		this.tileHeight = tileHeight;
 		setPreferredSize(new Dimension(width, height));
-		setOpaque(false);
+		//setOpaque(false);
 		setBounds(x, y, width,height);
 		setLayout(new GridLayout(row, column));
 	}
-	
+
+
+
 	public void setBoard(String[][] cellz)
     {
 		tiles = new BoardTile[cellz.length][cellz.length];
-		Board.printBoard(cellz);
 		for (int i = 0; i < cellz.length; i++)
 		{
 			for (int j = 0; j < cellz.length; j++) 

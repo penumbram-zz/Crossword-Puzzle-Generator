@@ -28,8 +28,8 @@ public class MainFrame extends JFrame
 	Timer timer = new Timer();
 	public BoardFrame boardFrame;
 	
-	    public MainFrame()  {
-
+	    public MainFrame()  
+	    {
 	        initUI();
 	        boardFrame = new BoardFrame();
 	    }
@@ -63,8 +63,10 @@ public class MainFrame extends JFrame
 
 			    TimerTask action = new TimerTask() {
 			        public void run() {
+			        	boardFrame.add(boardFrame.boardSelectionPanel);
+			        	boardFrame.remove(boardFrame.boardEditorPanel);
 			            boardFrame.setVisible(true);
-			            System.out.println("timertask worked");
+			            boardFrame.boardSelectionPanel.setVisible(true);
 			        }
 
 			    };
@@ -104,7 +106,11 @@ public class MainFrame extends JFrame
 
 			    TimerTask action = new TimerTask() {
 			        public void run() {
+			        	boardFrame.remove(boardFrame.boardSelectionPanel);
+			        	boardFrame.add(boardFrame.boardEditorPanel);
 			            boardFrame.setVisible(true);
+			            boardFrame.boardEditorPanel.editNewBoard();
+			            boardFrame.boardEditorPanel.setVisible(true);
 			            System.out.println("timertask worked");
 			        }
 

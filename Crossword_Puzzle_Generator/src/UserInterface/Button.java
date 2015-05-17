@@ -64,7 +64,7 @@ public class Button extends JButton implements ActionListener
 	    	g.drawImage(getImageWithAlpha(glowImage, this.alpha), 0,0,null);
 	}
 	
-	private BufferedImage getImageWithAlpha(BufferedImage src, float alpha)
+	public static BufferedImage getImageWithAlpha(BufferedImage src, float alpha)
     {
         BufferedImage dest = new BufferedImage(src.getWidth(), src.getHeight(),
                                                BufferedImage.TYPE_INT_ARGB);

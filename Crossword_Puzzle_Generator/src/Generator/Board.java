@@ -13,23 +13,35 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.logging.Logger;
 
+import Observer.AnimationObserver;
+import Observer.BoardObserver;
+import Observer.BoardSubject;
 
-public class Board {
-	
+
+public class Board implements BoardSubject {
+	private ArrayList<BoardObserver> observers = new ArrayList<BoardObserver>();
 	public String[][] cells;
+	public String[][] savedCells;
 	int myWidth;
 	int myHeight;
 	ArrayList<String> wordsInBoard = new ArrayList<String>();
 	ArrayList<ArrayList<int[]>> longestPaths = new ArrayList<ArrayList<int[]>>();
 	ArrayList<ArrayList<int[]>> otherPaths = new ArrayList<ArrayList<int[]>>();
-	ArrayList<ArrayList<int[]>> allPaths = new ArrayList<ArrayList<int[]>>();
+	public ArrayList<ArrayList<int[]>> allPaths = new ArrayList<ArrayList<int[]>>();
+	
+	public ArrayList<String> ruledOutWords = new ArrayList<String>();
 	// Desktop git push check
-	
-	
 	
 	String alphabet = "abcdefghijklmnopqrstuvwxyz";
 	
-	
+	public void clearAll()
+	{
+		setCells(savedCells);
+		wordsInBoard.clear();
+		longestPaths.clear();
+		otherPaths.clear();
+		allPaths.clear();
+	}
 	
 	public Board(int width, int height) 
 	{
@@ -48,6 +60,15 @@ public class Board {
 				cells[i][j] = new StringBuilder().append(alphabet.charAt(r.nextInt(alphabet.length()))).toString();
 			}
 		}
+	}
+	
+	public void setCells(String[][] cells)
+	{
+		this.cells = cells;
+	}
+	public void saveCells(String[][] cells)
+	{
+		this.savedCells = cells;
 	}
 	
 	public static void printBoard(String[][] _cells)
@@ -215,51 +236,13 @@ public class Board {
 			log("Wrote: " + le + " To: " + "cells[" + someList.get(j)[0] + "][" + someList.get(j)[1] + "]");
 		}
 		wordsInBoard.add(word);
-		Dictionary.letterLists.get(someList.size()).remove(word);
-		
+	//	Dictionary.letterLists.get(someList.size()).remove(word);
+		notifyObservers(someList,word);
 		//placeVerticalWordsWithHorizontalWord(firstWord,someList);
 		
 	}
-	private void placeVerticalWordsWithHorizontalWord(String horizontalWord,ArrayList<int[]> coords)
-	{
-		//int myRange = getRange(coords.get(0),true);
-		HashMap<String, Integer> scoresList = new HashMap<String, Integer>();
-		
-		for (String s : Dictionary.letterLists.get(coords.size()))
-		{
-			if (String.valueOf(s.charAt(0)).equalsIgnoreCase(String.valueOf(horizontalWord.charAt(0)))) // if 0/0 letter equals first letter of s (a.k.a. inspected word)
-			{
-				String[] letters = s.split(""); // get the letters of s
-				int score = 0; // initialize score to 0
-				for (String  s2 : Dictionary.letterLists.get(coords.size()))
-				{
-					if (String.valueOf(s2.charAt(0)).equalsIgnoreCase(letters[1]))
-					{
-						score++;
-					}
-				}
-				scoresList.put(s, new Integer(score));
-				
-			}
-		}
-		log((Collections.max(scoresList.values())) + " - " + getWordsWithMaxScores(scoresList).toString()); // prints words with highest scores
-		Random rnd = new Random();
-		
-		int index = rnd.nextInt(getWordsWithMaxScores(scoresList).size());
-		String wordd = getWordsWithMaxScores(scoresList).get(index);
-	//	Object myKey = scoresList.keySet().toArray()[index];
-		log(wordd);
-		//placeVerticalWord(wordd,coords);
-	}
-	
-	private int wordScore(String word)
-	{
-		for (String w : Dictionary.letterLists.get(word.length()))
-		{
-			
-		}
-		return 0;
-	}
+
+
 	
 	private ArrayList<String> getWordsWithMaxScores(HashMap<String, Integer> map)
 	{
@@ -283,11 +266,11 @@ public class Board {
 		{
 			for (int j = 0; j < myHeight; j++)
 			{
-				if (cells[i][j] == " ")
+				if (cells[j][i] == " ")
 				{
-					path.add(newCoordinates(i, j));
+					path.add(newCoordinates(j, i));
 				}
-				else if (cells[i][j] == "X")
+				else if (cells[j][i] == "X")
 				{
 					ArrayList<int[]> temp = new ArrayList<int[]>();
 					temp.addAll(path);
@@ -315,7 +298,7 @@ public class Board {
 			{
 				if (cells[i][j] == " ")
 				{
-					path.add(newCoordinates(j, i));
+					path.add(newCoordinates(i, j));
 				}
 				else if (cells[i][j] == "X")
 				{
@@ -445,7 +428,7 @@ public class Board {
 				}
 				
 			}
-			if (flag)
+			if (flag && !wordsInBoard.contains(string) && !ruledOutWords.contains(string))
 				candidateWords.add(string);
 		}
 		log(candidateWords.toString());
@@ -613,9 +596,9 @@ public class Board {
 			}
 		}
 		
-		log("LIST OF OWNING PATHS OF");
-		logCoords(list);
-		log("IS AS FOLLOWS: ");
+	//	log("LIST OF OWNING PATHS OF");
+	//	logCoords(list);
+	//	log("IS AS FOLLOWS: ");
 		/*for (int i = 0; i < owningPaths.size(); i++)
 		{
 			logCoords(owningPaths.get(i));
@@ -641,176 +624,6 @@ public class Board {
 		}
 	}
 	
-	private void checkNeighbours(ArrayList<int[]> list)
-	{
-		ArrayList<ArrayList<int[]>> pathsToCheck = new ArrayList<ArrayList<int[]>>();
-		
-		if (isVertical(list))
-		{
-			for (int[] place : list)
-			{
-				int _x = place[0];
-				int _y = place[1];
-				
-				//ToTheLeft	
-				int xx = _x;
-				int yy = _y;
-						
-				boolean b = true;
-						
-				ArrayList<int[]> path = new ArrayList<int[]>();
-				path.add(place);
-						
-				while(b)
-				{
-					xx--;
-						
-					if (xx > 0 && xx < myWidth)
-					{
-						if (cells[xx][_y] == null && cells[xx][_y] == "X")
-						{
-							b = false;
-							if (path.size() >= 2)
-							{
-								pathsToCheck.add(path);
-							}
-						}
-						else
-						{
-							path.add(newCoordinates(xx, _y));
-						}
-					}
-					else
-					{
-						if (path.size() >= 2)
-						{
-							pathsToCheck.add(path);
-						}
-						b = false;
-					}
-				}			
-					//ToTheLeft
-					//ToTheRight
-					
-				xx = _x;
-				yy = _y;
-					
-				b = true;
-					
-				path = new ArrayList<int[]>();
-				path.add(place);
-					
-				while(b)
-				{
-					xx++;
-						
-					if (xx < myWidth)
-					{
-						if (cells[xx][_y] == null && cells[xx][_y] == "X")
-						{
-							b = false;
-							if (path.size() >= 2)
-							{
-								pathsToCheck.add(path);
-							}
-						}
-						else
-						{
-							path.add(newCoordinates(xx, _y));
-						}
-					}
-					else
-					{
-						if (path.size() >= 2)
-						{
-							pathsToCheck.add(path);
-						}
-						b = false;
-					}
-				}
-					
-				//ToTheRight
-			}
-		}
-		
-		for (ArrayList<int[]> arrayList : pathsToCheck) 
-		{
-			log("Neighbouring Check");
-			logCoords(arrayList);
-			log("Neighbouring Check");
-		}
-		
-		/*
-		
-		
-				
-			//Downwards
-				
-			xx = _x;
-			yy = _y;
-				
-			b = true;
-			
-			path = new ArrayList<int[]>();
-			path.add(place);
-				
-			while(b)
-			{
-				yy++;
-					
-				if (yy < myHeight)
-				{
-					if (cells[_x][yy] == null && cells[_x][yy] == "X")
-					{
-						b = false;
-						if (path.size() >= 2)
-						{
-							pathsToCheck.add(path);
-						}
-					}
-					else
-					{
-						path.add(newCoordinates(_x, yy));
-					}
-				}
-			}
-				
-			//Downwards
-				
-			//Upwards
-				
-			xx = _x;
-			yy = _y;
-				
-			b = true;
-				
-			path = new ArrayList<int[]>();
-			path.add(place);
-				
-			while(b)
-			{
-				yy--;
-					
-				if (yy > 0)
-				{
-					if (cells[_x][yy] == null && cells[_x][yy] == "X")
-					{
-						b = false;
-						if (path.size() >= 2)
-						{
-							pathsToCheck.add(path);
-						}
-					}
-					else
-					{
-						path.add(newCoordinates(_x, yy));
-					}
-				}
-			}
-			//Upwards				
-		}
-		*/
-	}
 	
 	public void logCoords(ArrayList<int[]> coords)
 	{
@@ -818,5 +631,134 @@ public class Board {
 		{
 			log("cell[" + String.valueOf(coords.get(i)[0]) + "][" + String.valueOf(coords.get(i)[1]) + "]");
 		}
+	}
+	
+	public ArrayList<int[]> validate()
+	{
+		longestPaths = new ArrayList<ArrayList<int[]>>();
+		otherPaths = new ArrayList<ArrayList<int[]>>();
+		allPaths = new ArrayList<ArrayList<int[]>>();
+		
+		log("---------  Horizontal --------");
+		ArrayList<int[]> path = new ArrayList<int[]>();
+		ArrayList<ArrayList<int[]>> paths = new ArrayList<ArrayList<int[]>>();
+		int i = 0;
+		for (i = 0; i < myWidth; i++)
+		{
+			for (int j = 0; j < myHeight; j++)
+			{
+				log(cells[j][i]);
+				if (!cells[j][i].equals("X"))
+				{
+					path.add(newCoordinates(j, i));
+				}
+				else
+				{
+					ArrayList<int[]> temp = new ArrayList<int[]>();
+					temp.addAll(path);
+					paths.add(temp);
+					logCoords(path);
+					log("");
+					path.clear();
+					continue;
+				}
+			}
+			ArrayList<int[]> temp = new ArrayList<int[]>();
+			temp.addAll(path);
+			paths.add(temp);
+			logCoords(path);
+			log("");
+			path.clear();
+		}
+		
+		path.clear();
+		log("---------  Vertical --------");
+		
+		for (i = 0; i < myHeight; i++)
+		{
+			for (int j = 0; j < myWidth; j++)
+			{
+				log(cells[i][j]);
+				if (!cells[i][j].equals("X"))
+				{
+					path.add(newCoordinates(i, j));
+				}
+				else
+				{
+					ArrayList<int[]> temp = new ArrayList<int[]>();
+					temp.addAll(path);
+					paths.add(temp);
+					logCoords(path);
+					log("");
+					path.clear();
+					continue;
+				}
+			}
+			ArrayList<int[]> temp = new ArrayList<int[]>();
+			temp.addAll(path);
+			paths.add(temp);
+			logCoords(path);
+			log("");
+			path.clear();
+		}
+		
+		log("Longest Paths: ");
+		
+		for (i = 0; i < paths.size(); i++)
+		{
+			if (paths.get(i).size() == myWidth) //TODO this only accepts width/height letter words as longest, tho there could be more categories
+			{
+				logCoords(paths.get(i));
+				longestPaths.add(paths.get(i));
+			}
+			else
+			{
+				if (paths.get(i).size() >= 2)
+				{
+					otherPaths.add(paths.get(i));
+				}
+			}
+		}
+		
+		allPaths.addAll(longestPaths);
+		allPaths.addAll(otherPaths);
+		
+		
+		for (ArrayList<int[]> arrayList : allPaths)
+		{
+			String someWord = "";
+			for (int[] intarr : arrayList) 
+				someWord += cells[intarr[0]][intarr[1]];
+			if (!Dictionary.letterLists.get(someWord.length()).contains(someWord))
+				return arrayList;
+			else
+			{
+				if (!wordsInBoard.contains(someWord))
+				{
+					wordsInBoard.add(someWord);
+				}
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public void registerObserver(BoardObserver observer) {
+		observers.add(observer);
+	}
+
+	@Override
+	public void removeObserver(BoardObserver observer) {
+		int i = observers.indexOf(observer);
+		if (i >= 0)
+			observers.remove(i);
+		
+	}
+
+	@Override
+	public void notifyObservers(ArrayList<int[]> list, String word) {
+		for (BoardObserver observer : observers)
+			observer.update(list,word);
+		
 	}
 }

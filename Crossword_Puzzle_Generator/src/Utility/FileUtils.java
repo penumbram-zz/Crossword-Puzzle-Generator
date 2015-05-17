@@ -6,6 +6,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import Generator.Board;
+
 public class FileUtils 
 {
 
@@ -34,7 +36,7 @@ public class FileUtils
 		    	line = br.readLine();
 		    }
         }
-		  
+        Singleton.getInstance().boards.clear();
         for (String board : boardPieces)
         {
         	int l = getBoardLength(board.length());
@@ -45,7 +47,7 @@ public class FileUtils
         	{
         		if (!String.valueOf(board.charAt(i)).equalsIgnoreCase("|"))
         		{
-        			aBoard[tileCounter][lineCounter] = String.valueOf(board.charAt(i));
+        			aBoard[lineCounter][tileCounter] = String.valueOf(board.charAt(i));
 					tileCounter++;
         			if (tileCounter == l)
         			{
@@ -58,7 +60,6 @@ public class FileUtils
         	}
         	Singleton.getInstance().boards.add(aBoard);
         }
-        
 	}
 	
 	private static int getBoardLength(int chars)

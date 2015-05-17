@@ -1,28 +1,36 @@
 package UserInterface;
 
-import Generator.Board;
+import CommandPattern.Command;
+import CommandPattern.Invoker;
+import CommandPattern.SelectBoardCommand;
+import Observer.AnimationObserver;
+import Utility.FileUtils;
 import Utility.Singleton;
+import Utility.Utils;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.Rectangle;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.SpringLayout;
 import javax.swing.plaf.basic.BasicArrowButton;
 
-public class BoardOptionPanel extends JPanel 
+public class BoardOptionPanel extends FadingPanel
 {
-	BoardOption previous;
-	BoardOption current;
-	BoardOption next;
-	int lastBoardIndex = 0;
-	boolean rightBlocked = false;
-	boolean leftBlocked = false;
+	Invoker invoker = new Invoker();
+	
+	public BoardOption previous;
+	public BoardOption current;
+	public BoardOption next;
+	public BoardSelectorModel selector;
+
 	public BoardOptionPanel()
 	{
 		SpringLayout springLayout = new SpringLayout();
@@ -30,12 +38,15 @@ public class BoardOptionPanel extends JPanel
 		setBackground(Color.YELLOW);
 		setLayout(springLayout);
 		
+		selector = new BoardSelectorModel();
 		
+		previous = new BoardOption(Singleton.getInstance().boards.get(0),new Dimension(150,150),0);
+		selector.registerObserver(previous);
+		current = new BoardOption(Singleton.getInstance().boards.get(1),new Dimension(200,200),1);
+		selector.registerObserver(current);
+		next = new BoardOption(Singleton.getInstance().boards.get(2), new Dimension(150,150),2);
+		selector.registerObserver(next);
 		
-		previous = new BoardOption(Singleton.getInstance().boards.get(0),new Dimension(150,150));
-		current = new BoardOption(Singleton.getInstance().boards.get(1),new Dimension(200,200));
-		next = new BoardOption(Singleton.getInstance().boards.get(2), new Dimension(150,150));
-		lastBoardIndex = 2;
 		add(previous);
 		add(current);
 		add(next);
@@ -80,7 +91,7 @@ public class BoardOptionPanel extends JPanel
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("Go Left");
-				go(false);
+				selector.go(false);
 			}
 		});
 		right.addActionListener(new ActionListener() {
@@ -89,9 +100,11 @@ public class BoardOptionPanel extends JPanel
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				System.out.println("Go Right");
-				go(true);
+				selector.go(true);
 			}
 		});
+		
+		final Command selectBoard = new SelectBoardCommand(current);
 		
 		jbutton.addActionListener(new ActionListener() {
 			
@@ -99,50 +112,14 @@ public class BoardOptionPanel extends JPanel
 			public void actionPerformed(ActionEvent e) 
 			{
 				System.out.println("select board: ");
-				Board.printBoard(current.getBoardCells());
+				invoker.setCommand(selectBoard);
+				invoker.trigger();
 			}
 		});
 	}
 
-
-	public void go(boolean right)
+	private void hidePanel()
 	{
-		if (leftBlocked && !right)
-			return;
-		if (rightBlocked && right)
-			return;
-		
-		if (right)
-			lastBoardIndex++;
-		else
-			lastBoardIndex--;
-		
-		if (lastBoardIndex-2 >= 0 && lastBoardIndex -2 < Singleton.getInstance().boards.size())
-		{
-			previous.setBoardCells(Singleton.getInstance().boards.get(lastBoardIndex-2));
-			previous.setVisible(true);
-			leftBlocked = false;
-		}
-		else
-		{
-			previous.setVisible(false);
-			leftBlocked = true;
-		}
-		if (lastBoardIndex-1 >= 0 && lastBoardIndex-1 < Singleton.getInstance().boards.size())
-		{
-			current.setBoardCells(Singleton.getInstance().boards.get(lastBoardIndex-1));
-		}
-		
-		if (lastBoardIndex < Singleton.getInstance().boards.size())
-		{
-			next.setBoardCells(Singleton.getInstance().boards.get(lastBoardIndex));
-			next.setVisible(true);
-			rightBlocked = false;
-		}
-		else
-		{
-			rightBlocked = true;
-			next.setVisible(false);
-		}
+		this.setVisible(false);
 	}
 }
