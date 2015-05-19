@@ -1,6 +1,7 @@
 package UserInterface;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridLayout;
@@ -13,10 +14,12 @@ import javax.swing.SwingUtilities;
 
 import org.pushingpixels.trident.Timeline;
 
+import Observer.AnimationObserver;
+import Utility.Singleton;
 import Utility.Utils;
 import Generator.Board;
 
-public class BoardPanel extends FadingPanel 
+public class BoardPanel extends FadingPanel
 {
 	private int tileWidth;
 	private int tileHeight;
@@ -63,5 +66,5 @@ public class BoardPanel extends FadingPanel
 			}
 		}
 	}
-	
+
 }

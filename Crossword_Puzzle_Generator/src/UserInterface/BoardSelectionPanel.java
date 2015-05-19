@@ -2,6 +2,7 @@ package UserInterface;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -11,6 +12,8 @@ import java.io.IOException;
 
 import javax.swing.JPanel;
 import javax.swing.SpringLayout;
+
+import org.pushingpixels.trident.Timeline;
 
 import Generator.Board;
 import Observer.AnimationObserver;
@@ -25,7 +28,6 @@ public class BoardSelectionPanel extends FadingPanel
 	public BoardSelectionPanel()
 	{
 		setSize(920, 500);
-		
 		setBounds(20, 20, 920, 500);
 		SpringLayout springLayout = new SpringLayout();
 		setLayout(springLayout);
@@ -51,6 +53,11 @@ public class BoardSelectionPanel extends FadingPanel
 			try {
 				FileUtils.readFile();
 				boardOptionPanel = new BoardOptionPanel();
+				Timeline fadeInTimeline = new Timeline(this);
+			      fadeInTimeline.addPropertyToInterpolate("Fadev", 0.0f,
+							1.0f);
+			      fadeInTimeline.setDuration(2000);
+			      fadeInTimeline.play();
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

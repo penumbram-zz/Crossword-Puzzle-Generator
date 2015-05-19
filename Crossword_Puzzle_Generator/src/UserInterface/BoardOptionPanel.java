@@ -9,6 +9,7 @@ import Utility.Singleton;
 import Utility.Utils;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -31,7 +32,8 @@ public class BoardOptionPanel extends FadingPanel
 	public BoardOption current;
 	public BoardOption next;
 	public BoardSelectorModel selector;
-
+	Button jbutton;
+	
 	public BoardOptionPanel()
 	{
 		SpringLayout springLayout = new SpringLayout();
@@ -74,7 +76,7 @@ public class BoardOptionPanel extends FadingPanel
 		
 		BasicArrowButton left = new BasicArrowButton(BasicArrowButton.WEST);
 		BasicArrowButton right = new BasicArrowButton(BasicArrowButton.EAST);
-		Button jbutton = new Button(Utils.getImage("resources/images/buttons.png",161,90),Utils.getImage("resources/images/buttons_glow.png",161,90));
+		jbutton = new Button(Utils.getImage("resources/images/buttons.png",161,90),Utils.getImage("resources/images/buttons_glow.png",161,90));
 		jbutton.setText("SELECT");
 		add(jbutton);
 		add(left);
@@ -119,14 +121,9 @@ public class BoardOptionPanel extends FadingPanel
 	}
 	
 	@Override
-	  protected void paintComponent(Graphics g) {
-
-	    super.paintComponent(g);
-	        g.drawImage(bgImage, 0, 0, null);
-	}
-
-	private void hidePanel()
+	protected void paintComponent(Graphics g) 
 	{
-		this.setVisible(false);
+	    super.paintComponent(g);
+	    g.drawImage(bgImage, 0, 0, null);
 	}
 }

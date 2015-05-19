@@ -1,6 +1,7 @@
 package UserInterface;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -14,6 +15,8 @@ import javax.swing.JPanel;
 
 import org.pushingpixels.trident.Timeline;
 
+import Observer.AnimationObserver;
+import Utility.Singleton;
 import Utility.Utils;
 
 public class BoardTile extends FadingPanel implements MouseListener
@@ -84,6 +87,5 @@ public class BoardTile extends FadingPanel implements MouseListener
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
 	}
-	
 	//MOUSE
 }

@@ -25,12 +25,12 @@ public class BoardFrame extends JFrame implements AnimationSubject
 	public BoardEditorPanel boardEditorPanel;
 	
 	private ArrayList<AnimationObserver> observers;
-	float opacity;
+	float opacity = 0f;
 	public void setValue(float newValue)
 	{
 		this.opacity = newValue;
 		notifyObservers();
-	//	setOpacity(newValue);
+		//setOpacity(newValue);
 	}
 	
 	public BoardFrame()
@@ -42,52 +42,42 @@ public class BoardFrame extends JFrame implements AnimationSubject
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setUndecorated(true);
-     //   setOpacity(0f);
         getContentPane().setBackground(Color.GRAY);
         BufferedImage backgroundImage = Utils.getImage("resources/images/office_bg.png", 960,540);
         setContentPane(new ImagePanel(backgroundImage));
-		//boardPanel = new BoardPanel(500,500,10,10,50,50);
 		boardSelectionPanel = new BoardSelectionPanel();
 		
-		registerObserver(boardSelectionPanel);
-		/*registerObserver(boardSelectionPanel.boardOptionPanel);
-		registerObserver(boardSelectionPanel.boardOptionPanel.previous);
-		registerObserver(boardSelectionPanel.boardOptionPanel.current);
-		registerObserver(boardSelectionPanel.boardOptionPanel.next);
-		registerObserver(boardSelectionPanel.boardOptionPanel.previous.bp);
-		registerObserver(boardSelectionPanel.boardOptionPanel.current.bp);
-		registerObserver(boardSelectionPanel.boardOptionPanel.next.bp);
-		for (int i = 0; i < boardSelectionPanel.boardOptionPanel.previous.bp.tiles.length; i++) {
-			for (int j = 0; j < boardSelectionPanel.boardOptionPanel.previous.bp.tiles.length; j++) {
-				registerObserver(boardSelectionPanel.boardOptionPanel.previous.bp.tiles[i][j]);
-			}
-		}
-		for (int i = 0; i < boardSelectionPanel.boardOptionPanel.current.bp.tiles.length; i++) {
-			for (int j = 0; j < boardSelectionPanel.boardOptionPanel.current.bp.tiles.length; j++) {
-				registerObserver(boardSelectionPanel.boardOptionPanel.current.bp.tiles[i][j]);
-			}
-		}
-		for (int i = 0; i < boardSelectionPanel.boardOptionPanel.next.bp.tiles.length; i++) {
-			for (int j = 0; j < boardSelectionPanel.boardOptionPanel.next.bp.tiles.length; j++) {
-				registerObserver(boardSelectionPanel.boardOptionPanel.next.bp.tiles[i][j]);
-			}
-		}*/
 		boardEditorPanel = new BoardEditorPanel();
 		add(boardSelectionPanel);
-		//add(boardPanel);
         
         
-      Timeline colorTimeline = new Timeline(this);
-		colorTimeline.addPropertyToInterpolate("value", 0.0f,
+    /*  Timeline fadeInTimeline = new Timeline(this);
+      fadeInTimeline.addPropertyToInterpolate("value", 0.0f,
 				1.0f);
-		colorTimeline.setDuration(10000);
-		colorTimeline.play(); 
-		
+      fadeInTimeline.setDuration(6000);
+      fadeInTimeline.play(); 
+		*/
+	}
+	
+	public void boardSelected(BoardOption boardOption)
+	{
+		boardSelectionPanel.setVisible(false);
+		//remove(boardSelectionPanel);
+		boardEditorPanel.editSelectedBoard(boardOption.myBoardCells);
+		add(boardEditorPanel);
+		boardEditorPanel.setVisible(true);
 	}
 
 	@Override
 	public void registerObserver(AnimationObserver observer) {
 		observers.add(observer);
+		if (observer instanceof FadingPanel)
+		{
+			for (AnimationObserver animationObserver : ((FadingPanel) observer).animatingObservers)
+			{
+				registerObserver(animationObserver);
+			}
+		}
 	}
 
 	@Override
@@ -102,4 +92,5 @@ public class BoardFrame extends JFrame implements AnimationSubject
 		for (AnimationObserver observer : observers)
 			observer.update(this.opacity);
 	}
+	
 }

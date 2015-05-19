@@ -27,13 +27,15 @@ import javax.swing.SpringLayout;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.pushingpixels.trident.Timeline;
+
 import Utility.FileUtils;
 import Utility.Singleton;
 import Utility.Utils;
 import Generator.Board;
 import Generator.Main;
 
-public class BoardEditorPanel extends JPanel 
+public class BoardEditorPanel extends FadingPanel 
 {
 	SpringLayout springLayout;
 	private BoardPanel bp;
@@ -296,4 +298,18 @@ public class BoardEditorPanel extends JPanel
 		    }
 		    return _return;
 		  }
+	 
+	 @Override
+		public void setVisible(boolean aFlag) {
+			// TODO Auto-generated method stub
+			super.setVisible(aFlag);
+			if (aFlag)
+			{
+				Timeline fadeInTimeline = new Timeline(this);
+				fadeInTimeline.addPropertyToInterpolate("Fadev", 0.0f,
+							1.0f);
+				fadeInTimeline.setDuration(2000);
+				fadeInTimeline.play();
+			}
+		}
 }

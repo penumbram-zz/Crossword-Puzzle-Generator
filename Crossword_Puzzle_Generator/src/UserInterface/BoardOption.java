@@ -1,6 +1,7 @@
 package UserInterface;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.util.HashMap;
 
@@ -8,6 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import Generator.Board;
+import Observer.AnimationObserver;
 import Observer.DisplayBoard;
 import Observer.Observer;
 import Utility.Singleton;
@@ -17,7 +19,7 @@ public class BoardOption extends FadingPanel implements Observer, DisplayBoard
 {
 	String[][] myBoardCells = null;
 	Dimension myDimension = null;
-	BoardPanel bp;
+	public BoardPanel bp;
 	int internalIndex = -1;
 	int lastIndex;
 	
@@ -47,14 +49,7 @@ public class BoardOption extends FadingPanel implements Observer, DisplayBoard
 		System.out.println("Selected: ");
 		Board.printBoard(myBoardCells);
 		
-		BoardEditorPanel bep = Singleton.getInstance().boardFrame.boardEditorPanel;
-		BoardSelectionPanel bsp = Singleton.getInstance().boardFrame.boardSelectionPanel;
-		
-		bsp.setVisible(false);
-		Singleton.getInstance().boardFrame.remove(bsp);
-		bep.editSelectedBoard(myBoardCells);
-		Singleton.getInstance().boardFrame.add(Singleton.getInstance().boardFrame.boardEditorPanel);
-		Singleton.getInstance().boardFrame.boardEditorPanel.setVisible(true);
+		Singleton.getInstance().boardFrame.boardSelected(this);
 	}
 	
 	public void deselect()
@@ -77,7 +72,7 @@ public class BoardOption extends FadingPanel implements Observer, DisplayBoard
 		
 		display();
 	}
-
+	
 	@Override
 	public void display() 
 	{
@@ -93,4 +88,5 @@ public class BoardOption extends FadingPanel implements Observer, DisplayBoard
     	bp.validate();
     	bp.repaint();
 	}
+
 }

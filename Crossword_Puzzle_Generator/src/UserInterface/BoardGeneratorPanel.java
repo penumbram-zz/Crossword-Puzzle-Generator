@@ -2,13 +2,21 @@ package UserInterface;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 import javax.swing.Spring;
 import javax.swing.SpringLayout;
+
+import org.pushingpixels.trident.Timeline;
+import org.pushingpixels.trident.Timeline.RepeatBehavior;
 
 import Generator.Board;
 import Generator.Dictionary;
@@ -19,12 +27,34 @@ import Utility.Utils;
 public class BoardGeneratorPanel extends FadingPanel implements BoardObserver {
 	SpringLayout springLayout;
 	private BoardPanel bp;
+	BufferedImage loadingImage = Utils.getImage("resources/images/loading.png", 50, 50);
 	String[][] cells;
 	Button buttonGenerate;
 	Button buttonBack;
 	Board board = null;
 	boolean regenerate = false;
 	Thread thread;
+	
+	Timeline timeline;
+	int rotation = 0;
+	boolean loading = false;
+	
+	@Override
+	protected void paintComponent(Graphics g) {
+		// TODO Auto-generated method stub
+		super.paintComponent(g);
+		if (loading)
+			g.drawImage(getFilter(loadingImage).filter(loadingImage, null), 865, 440, null);
+	}
+
+	private AffineTransformOp getFilter(BufferedImage image)
+	{
+		double locationX = image.getWidth() / 2;
+		double locationY = image.getHeight() / 2;
+		AffineTransform tx = AffineTransform.getRotateInstance(Math.toRadians(this.rotation), locationX, locationY);
+		AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
+		return op;
+	}
 	
 	public BoardGeneratorPanel(String[][] cells)
 	{
@@ -75,6 +105,15 @@ public class BoardGeneratorPanel extends FadingPanel implements BoardObserver {
 			}
 		});
 		springLayout.putConstraint(SpringLayout.SOUTH, buttonBack, 0, SpringLayout.SOUTH, this);
+		timeline = new Timeline(this);
+		timeline.addPropertyToInterpolate("rotation", 0, 360);
+		timeline.setDuration(1000);
+	}
+	
+	public void setRotation(int rot)
+	{
+		this.rotation = rot;
+		repaint();
 	}
 	
 	private void goBack()
@@ -109,6 +148,7 @@ public class BoardGeneratorPanel extends FadingPanel implements BoardObserver {
 			@Override
 			public void run() 
 			{
+				loading = true;
 				board.searchLongestPaths();
 				board.fillLongestWords();
 				board.fillRestOfWords();
@@ -117,6 +157,8 @@ public class BoardGeneratorPanel extends FadingPanel implements BoardObserver {
 				Utils.logg("AFTER");
 				board.printBoard(board.cells);
 				ArrayList<int[]> validation = board.validate();
+				timeline.cancel();
+				loading = false;
 				if (validation == null)
 				{
 					regenerate = false;
@@ -138,6 +180,7 @@ public class BoardGeneratorPanel extends FadingPanel implements BoardObserver {
 		};
 		thread = new Thread(runnable);
 		thread.start();
+		timeline.playLoop(RepeatBehavior.LOOP);
 		if (regenerate)
 		{
 			board.clearAll();

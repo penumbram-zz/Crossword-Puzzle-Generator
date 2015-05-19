@@ -29,15 +29,17 @@ import org.pushingpixels.trident.Timeline.RepeatBehavior;
 import org.pushingpixels.trident.Timeline.TimelineState;
 import org.pushingpixels.trident.callback.TimelineCallback;
 
+import Observer.AnimationObserver;
 import Utility.Utils;
 
-public class Button extends JButton implements ActionListener,MouseListener
+public class Button extends JButton implements ActionListener,MouseListener,AnimationObserver
 {
 	BufferedImage image;
 	BufferedImage glowImage;
 	JLabel label;
 	SpringLayout springLayout;
 	float alpha = 0f;
+	float _alpha = 1f;
 	Timeline timeline;
 	
 	public Button(BufferedImage anImage) {
@@ -75,9 +77,10 @@ public class Button extends JButton implements ActionListener,MouseListener
 	@Override
 	protected void paintComponent(Graphics g) {
 	    super.paintComponent(g);
-	    g.drawImage(image, 0, 0, null);
+	    g.drawImage(getImageWithAlpha(image, this._alpha), 0,0,null);
 	    if (glowImage != null)
 	    	g.drawImage(getImageWithAlpha(glowImage, this.alpha), 0,0,null);
+	    
 	}
 	
 	public static BufferedImage getImageWithAlpha(BufferedImage src, float alpha)
@@ -181,5 +184,10 @@ public class Button extends JButton implements ActionListener,MouseListener
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void update(float opacity) {
+		this._alpha = opacity;
 	}
 }
