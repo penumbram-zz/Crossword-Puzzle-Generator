@@ -1,28 +1,42 @@
 package UserInterface;
 
 import java.awt.AlphaComposite;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+import javafx.scene.control.Label;
+
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
+import javax.swing.text.StyledEditorKit.BoldAction;
 
 import org.pushingpixels.trident.Timeline;
 import org.pushingpixels.trident.Timeline.RepeatBehavior;
 import org.pushingpixels.trident.Timeline.TimelineState;
 import org.pushingpixels.trident.callback.TimelineCallback;
 
-public class Button extends JButton implements ActionListener
+import Utility.Utils;
+
+public class Button extends JButton implements ActionListener,MouseListener
 {
 	BufferedImage image;
 	BufferedImage glowImage;
+	JLabel label;
+	SpringLayout springLayout;
 	float alpha = 0f;
 	Timeline timeline;
 	
@@ -48,11 +62,13 @@ public class Button extends JButton implements ActionListener
 	        setFocusPainted(false);
 	        setBorderPainted(false);
 	        addActionListener(this);
-	        
+	        addMouseListener(this);
+	        springLayout = new SpringLayout();
+	        setLayout(springLayout);
 	        timeline = new Timeline(this);
 			timeline.addPropertyToInterpolate("glowValue", 0.0f,
 					1.0f);
-			timeline.setDuration(1000);
+			timeline.setDuration(500);
 		}
 }
 
@@ -76,6 +92,22 @@ public class Button extends JButton implements ActionListener
         g2.dispose();
         return dest;
     }
+	
+	public void setText(String text)
+	{
+		if (label != null)
+			remove(label);
+		label = new JLabel(text);
+		label.setFont(new Font("Helvetica", Font.BOLD, label.getFont().getSize()));
+		label.setForeground(Color.WHITE);
+		label.setBounds(0, 0, label.getWidth(), label.getHeight());
+		add(label);
+		if (springLayout != null)
+		{
+			springLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, label, 0, SpringLayout.HORIZONTAL_CENTER, this);
+			springLayout.putConstraint(SpringLayout.VERTICAL_CENTER, label, 0, SpringLayout.VERTICAL_CENTER, this);
+		}
+	}
 
 	@Override
 	public Dimension getPreferredSize() {
@@ -120,5 +152,34 @@ public class Button extends JButton implements ActionListener
 		_timeline.setDuration(200);
 		_timeline.play();
 		_timeline.playLoop(4, RepeatBehavior.REVERSE);
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		chargeGlow();
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		dischargeGlow();
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -128,6 +128,11 @@ public class Board implements BoardSubject {
 		}
 	}
 	
+	public String getWordsInBoard()
+	{
+		return wordsInBoard.toString();
+	}
+	
 	public void fillBoardWithWords()
 	{
 		System.out.println();
@@ -320,10 +325,19 @@ public class Board implements BoardSubject {
 		}
 		
 		log("Longest Paths: ");
+		int topLength = 0;
 		
 		for (i = 0; i < paths.size(); i++)
 		{
-			if (paths.get(i).size() == myWidth) //TODO this only accepts width/height letter words as longest, tho there could be more categories
+			if (paths.get(i).size() > topLength) 
+			{
+				topLength = paths.get(i).size();
+			}
+		}
+		
+		for (i = 0; i < paths.size(); i++)
+		{
+			if (paths.get(i).size() == topLength) 
 			{
 				logCoords(paths.get(i));
 				longestPaths.add(paths.get(i));
@@ -496,7 +510,9 @@ public class Board implements BoardSubject {
 				final_score = final_score * letter_scores[i];
 			}
 			final_score /= (variance + 1);
-			// NEW
+			if (final_score <1 && final_score > 0)
+				final_score = 1;
+			
 			scoresList.put(s, new Integer((int)final_score));
 		}
 		log(scoresList.toString());

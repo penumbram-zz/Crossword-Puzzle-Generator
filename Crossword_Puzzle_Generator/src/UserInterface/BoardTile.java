@@ -20,7 +20,7 @@ public class BoardTile extends FadingPanel implements MouseListener
 {
 	Color myColor;
 	Boolean clickable = false;
-	JLabel label = new JLabel("");
+	JLabel label = new JLabel("a");
 	public BoardTile(int width,int height)
 	{
 		setSize(width,height);
@@ -30,7 +30,7 @@ public class BoardTile extends FadingPanel implements MouseListener
         addMouseListener(this);
         
         add(label);
-        label.setFont(new Font("Verdana", Font.BOLD, width/3));
+        label.setFont(new Font("Verdana", Font.BOLD, 4*width/9));
         label.setForeground(Color.BLACK);
 	}
 	public Color getColor()

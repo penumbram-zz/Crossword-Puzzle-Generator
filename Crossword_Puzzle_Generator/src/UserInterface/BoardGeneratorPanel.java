@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
 import javax.swing.Spring;
 import javax.swing.SpringLayout;
 
@@ -23,6 +24,7 @@ public class BoardGeneratorPanel extends FadingPanel implements BoardObserver {
 	Button buttonBack;
 	Board board = null;
 	boolean regenerate = false;
+	Thread thread;
 	
 	public BoardGeneratorPanel(String[][] cells)
 	{
@@ -32,8 +34,8 @@ public class BoardGeneratorPanel extends FadingPanel implements BoardObserver {
 		setBounds(20, 20, 920, 500);
 		springLayout = new SpringLayout();
 		setLayout(springLayout);
-		
-		bp = new BoardPanel(400,400,cells.length,cells.length,100,100,50,50);
+		int i = ((int)(400 / this.cells.length));
+		bp = new BoardPanel(400,400,cells.length,cells.length,i,i,0,0);
 		
 		bp.setBoard(cells);
 		bp.setClickable(false);
@@ -42,12 +44,13 @@ public class BoardGeneratorPanel extends FadingPanel implements BoardObserver {
 		setVisible(true);
 		
 		springLayout.putConstraint(SpringLayout.EAST, bp, 710, SpringLayout.WEST, this);
-		springLayout.putConstraint(SpringLayout.NORTH, bp, 110, SpringLayout.NORTH, this);
+		springLayout.putConstraint(SpringLayout.NORTH, bp, 95, SpringLayout.NORTH, this);
 		
-		buttonGenerate = new Button(null);
+		buttonGenerate = new Button(Utils.getImage("resources/images/buttons.png",161,90),Utils.getImage("resources/images/buttons_glow.png",161,90));
 		buttonGenerate.setText("Generate");
 		add(buttonGenerate);
 		buttonGenerate.setPreferredSize(new Dimension(100, 30));
+		buttonGenerate.setVisible(true);
 		buttonGenerate.addActionListener(new ActionListener() {
 			
 			@Override
@@ -55,10 +58,11 @@ public class BoardGeneratorPanel extends FadingPanel implements BoardObserver {
 				Utils.logg("Gonna generate board here");
 				setGenerationParameters();
 				generate();
+				buttonGenerate.setVisible(false);
 			}
 		});
 		
-		buttonBack = new Button(null);
+		buttonBack = new Button(Utils.getImage("resources/images/buttons.png",161,90),Utils.getImage("resources/images/buttons_glow.png",161,90));
 		buttonBack.setText("Back");
 		add(buttonBack);
 		buttonBack.setPreferredSize(new Dimension(100, 30));
@@ -70,7 +74,7 @@ public class BoardGeneratorPanel extends FadingPanel implements BoardObserver {
 				goBack();
 			}
 		});
-		springLayout.putConstraint(SpringLayout.NORTH, buttonBack, 50, SpringLayout.SOUTH, buttonGenerate);
+		springLayout.putConstraint(SpringLayout.SOUTH, buttonBack, 0, SpringLayout.SOUTH, this);
 	}
 	
 	private void goBack()
@@ -79,6 +83,13 @@ public class BoardGeneratorPanel extends FadingPanel implements BoardObserver {
 		Singleton.getInstance().boardFrame.remove(this);
 		Singleton.getInstance().boardFrame.add(Singleton.getInstance().boardFrame.boardSelectionPanel);
 		Singleton.getInstance().boardFrame.boardSelectionPanel.setVisible(true);
+		if (thread != null)
+		{
+			if (thread.isAlive())
+			{
+				thread.stop();
+			}
+		}
 	}
 	
 	private void setGenerationParameters()
@@ -107,7 +118,10 @@ public class BoardGeneratorPanel extends FadingPanel implements BoardObserver {
 				board.printBoard(board.cells);
 				ArrayList<int[]> validation = board.validate();
 				if (validation == null)
+				{
 					regenerate = false;
+					JOptionPane.showMessageDialog(null, board.getWordsInBoard());
+				}
 				else
 				{
 					String problem = "";
@@ -122,7 +136,7 @@ public class BoardGeneratorPanel extends FadingPanel implements BoardObserver {
 				}
 			}
 		};
-		Thread thread = new Thread(runnable);
+		thread = new Thread(runnable);
 		thread.start();
 		if (regenerate)
 		{

@@ -60,7 +60,7 @@ public class BoardEditorPanel extends JPanel
 		bp.setVisible(true);
 		setVisible(true);
 		
-		buttonSave = new Button(null);
+		buttonSave = new Button(Utils.getImage("resources/images/buttons.png",161,90),Utils.getImage("resources/images/buttons_glow.png",161,90));
 		buttonSave.setText("Save");
 		add(buttonSave);
 		buttonSave.setPreferredSize(new Dimension(100, 30));
@@ -81,7 +81,7 @@ public class BoardEditorPanel extends JPanel
 			}
 		});
 		
-		buttonGo = new Button(null);
+		buttonGo = new Button(Utils.getImage("resources/images/buttons.png",161,90),Utils.getImage("resources/images/buttons_glow.png",161,90));
 		buttonGo.setText("Go");
 		add(buttonGo);
 		buttonGo.setPreferredSize(new Dimension(100, 30));
@@ -124,10 +124,8 @@ public class BoardEditorPanel extends JPanel
 		spinner = getSpinnerDemo();
 		add(spinner);
 		
-		springLayout.putConstraint(SpringLayout.WEST, buttonSave, 100, SpringLayout.WEST, this);
-		springLayout.putConstraint(SpringLayout.VERTICAL_CENTER, buttonSave, 220, SpringLayout.VERTICAL_CENTER, this);
-		//springLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, bp, 0, SpringLayout.HORIZONTAL_CENTER, this);
-		//springLayout.putConstraint(SpringLayout.VERTICAL_CENTER, bp, 0, SpringLayout.VERTICAL_CENTER, this);
+	//	springLayout.putConstraint(SpringLayout.WEST, buttonSave, 100, SpringLayout.WEST, this);
+		springLayout.putConstraint(SpringLayout.VERTICAL_CENTER, buttonSave, 200, SpringLayout.VERTICAL_CENTER, this);
 		setBoardPosition();
 		springLayout.putConstraint(SpringLayout.WEST, spinner, 30, SpringLayout.EAST, buttonSave);
 		springLayout.putConstraint(SpringLayout.VERTICAL_CENTER, spinner, 0, SpringLayout.VERTICAL_CENTER, buttonSave);
@@ -145,7 +143,7 @@ public class BoardEditorPanel extends JPanel
 	private void setBoardPosition()
 	{
 		springLayout.putConstraint(SpringLayout.EAST, bp, 710, SpringLayout.WEST, this);
-		springLayout.putConstraint(SpringLayout.NORTH, bp, 110, SpringLayout.NORTH, this);
+		springLayout.putConstraint(SpringLayout.NORTH, bp, 95, SpringLayout.NORTH, this);
 	}
 	 private JSpinner getSpinnerDemo(){
 	      SpinnerModel spinnerModel =
@@ -204,7 +202,8 @@ public class BoardEditorPanel extends JPanel
 		spinner.setVisible(false);
 		buttonSave.setVisible(false);
 		remove(bp);
-     	bp = new BoardPanel(400, 400, cells.length, cells.length, 40, 40, 50, 50);
+		int i = ((int)(400 / cells.length));
+     	bp = new BoardPanel(400, 400, cells.length, cells.length, i, i, 0, 0);
      	Board b = new Board(cells.length, cells.length);
      	b.initBoard();
      	bp.setBoard(cells);

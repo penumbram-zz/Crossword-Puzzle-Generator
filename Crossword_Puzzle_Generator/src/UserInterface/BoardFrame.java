@@ -16,6 +16,7 @@ import Observer.AnimationObserver;
 import Observer.AnimationSubject;
 import Observer.Observer;
 import Utility.Singleton;
+import Utility.Utils;
 
 public class BoardFrame extends JFrame implements AnimationSubject
 {
@@ -43,7 +44,7 @@ public class BoardFrame extends JFrame implements AnimationSubject
         setUndecorated(true);
      //   setOpacity(0f);
         getContentPane().setBackground(Color.GRAY);
-        BufferedImage backgroundImage = MainFrame.getImage("resources/images/office_bg.png", 960,540);
+        BufferedImage backgroundImage = Utils.getImage("resources/images/office_bg.png", 960,540);
         setContentPane(new ImagePanel(backgroundImage));
 		//boardPanel = new BoardPanel(500,500,10,10,50,50);
 		boardSelectionPanel = new BoardSelectionPanel();

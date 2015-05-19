@@ -25,12 +25,11 @@ public class BoardSelectionPanel extends FadingPanel
 	public BoardSelectionPanel()
 	{
 		setSize(920, 500);
-		setBackground(Color.RED);
+		
 		setBounds(20, 20, 920, 500);
 		SpringLayout springLayout = new SpringLayout();
 		setLayout(springLayout);
-	//	BufferedImage backgroundImage = MainFrame.getImage("resources/images/office_bg.png", 960,540);
-	//	this.addImage(backgroundImage);
+		setOpaque(false);
 		
 		boardOptionPanel = new BoardOptionPanel();
 		add(boardOptionPanel);

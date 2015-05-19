@@ -11,6 +11,7 @@ import Utility.Utils;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -25,7 +26,7 @@ import javax.swing.plaf.basic.BasicArrowButton;
 public class BoardOptionPanel extends FadingPanel
 {
 	Invoker invoker = new Invoker();
-	
+	Image bgImage = Utils.getImage("resources/images/tahta_BG.png", 800, 400);
 	public BoardOption previous;
 	public BoardOption current;
 	public BoardOption next;
@@ -35,7 +36,6 @@ public class BoardOptionPanel extends FadingPanel
 	{
 		SpringLayout springLayout = new SpringLayout();
 		setPreferredSize(new Dimension(800,400));
-		setBackground(Color.YELLOW);
 		setLayout(springLayout);
 		
 		selector = new BoardSelectorModel();
@@ -74,7 +74,8 @@ public class BoardOptionPanel extends FadingPanel
 		
 		BasicArrowButton left = new BasicArrowButton(BasicArrowButton.WEST);
 		BasicArrowButton right = new BasicArrowButton(BasicArrowButton.EAST);
-		JButton jbutton = new JButton("Select");
+		Button jbutton = new Button(Utils.getImage("resources/images/buttons.png",161,90),Utils.getImage("resources/images/buttons_glow.png",161,90));
+		jbutton.setText("SELECT");
 		add(jbutton);
 		add(left);
 		add(right);
@@ -83,7 +84,7 @@ public class BoardOptionPanel extends FadingPanel
 		springLayout.putConstraint(SpringLayout.NORTH, left, 30, SpringLayout.SOUTH, current);
 		springLayout.putConstraint(SpringLayout.EAST, right, 0, SpringLayout.EAST, current);
 		springLayout.putConstraint(SpringLayout.NORTH, right, 30, SpringLayout.SOUTH, current);
-		springLayout.putConstraint(SpringLayout.NORTH, jbutton, 20, SpringLayout.SOUTH, current);
+		springLayout.putConstraint(SpringLayout.NORTH, jbutton, 10, SpringLayout.SOUTH, current);
 		springLayout.putConstraint(SpringLayout.HORIZONTAL_CENTER, jbutton, 0, SpringLayout.HORIZONTAL_CENTER, this);
 		
 		left.addActionListener(new ActionListener() {
@@ -105,7 +106,6 @@ public class BoardOptionPanel extends FadingPanel
 		});
 		
 		final Command selectBoard = new SelectBoardCommand(current);
-		
 		jbutton.addActionListener(new ActionListener() {
 			
 			@Override
@@ -116,6 +116,13 @@ public class BoardOptionPanel extends FadingPanel
 				invoker.trigger();
 			}
 		});
+	}
+	
+	@Override
+	  protected void paintComponent(Graphics g) {
+
+	    super.paintComponent(g);
+	        g.drawImage(bgImage, 0, 0, null);
 	}
 
 	private void hidePanel()
