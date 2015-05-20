@@ -66,5 +66,4 @@ public class BoardPanel extends FadingPanel
 			}
 		}
 	}
-
 }

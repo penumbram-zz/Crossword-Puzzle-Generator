@@ -325,7 +325,7 @@ public class Board implements BoardSubject {
 		}
 		
 		log("Longest Paths: ");
-		int topLength = 0;
+		int topLength = 1;
 		
 		for (i = 0; i < paths.size(); i++)
 		{
@@ -337,9 +337,8 @@ public class Board implements BoardSubject {
 		
 		for (i = 0; i < paths.size(); i++)
 		{
-			if (paths.get(i).size() == topLength) 
+			if (paths.get(i).size() == topLength && topLength > 1) 
 			{
-				logCoords(paths.get(i));
 				longestPaths.add(paths.get(i));
 			}
 			else

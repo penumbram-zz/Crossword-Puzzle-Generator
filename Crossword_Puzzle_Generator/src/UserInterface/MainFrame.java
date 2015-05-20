@@ -44,11 +44,11 @@ public class MainFrame extends JFrame
 	        setDefaultCloseOperation(EXIT_ON_CLOSE);
 	        //setExtendedState(JFrame.MAXIMIZED_BOTH);
 	        setUndecorated(true);
-	        BufferedImage backgroundImage = Utils.getImage("resources/images/bg.png", 960,540);
+	        BufferedImage backgroundImage = Utils.getImage("resources/images/bg2.png", 960,540);
 	        this.setContentPane(new ImagePanel(backgroundImage));
 	        final Button button = new Button(Utils.getImage("resources/images/defter.png",195,70),Utils.getImage("resources/images/defter_glow.png",195,70));
 	        add(button);
-	        button.setBounds(130, 420, 195, 70);	  
+	        button.setBounds(65, 420, 195, 70);	  
 	        button.addActionListener(new ActionListener()
 	        {
 
@@ -58,20 +58,19 @@ public class MainFrame extends JFrame
 				// TODO Auto-generated method stuff
 				System.out.println("button clicked");
 				
-				timer.cancel(); //this will cancel the current task. if there is no active task, nothing happens
+				timer.cancel(); 
 			    timer = new Timer();
 
 			    TimerTask action = new TimerTask() {
 			        public void run() {
-			        	boardFrame.add(boardFrame.boardSelectionPanel);
-			        	boardFrame.remove(boardFrame.boardEditorPanel);
+			        	Utils.logg("defter");
 			            boardFrame.setVisible(true);
-			            boardFrame.boardSelectionPanel.setVisible(true);
+			            boardFrame.boardSelectionPanel.setVisibility(true);
 			        }
 
 			    };
 
-			    timer.schedule(action, 1000); //this starts the task
+			    timer.schedule(action, 1000); 
 			}
 	        });
 	       
@@ -80,7 +79,7 @@ public class MainFrame extends JFrame
 	        
 	        final Button editButton = new Button(Utils.getImage("resources/images/edit_button.png",235,217),Utils.getImage("resources/images/edit_button_glow.png",235,217));
 	        add(editButton);
-	        editButton.setBounds(0, 120, 235, 217);	
+	        editButton.setBounds(49, 95, 235, 217);	
 	        editButton.addActionListener(new ActionListener()
 	        {
 			@Override

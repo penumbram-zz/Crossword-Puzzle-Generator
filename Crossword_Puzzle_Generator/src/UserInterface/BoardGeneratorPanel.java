@@ -66,7 +66,6 @@ public class BoardGeneratorPanel extends FadingPanel implements BoardObserver {
 		setLayout(springLayout);
 		int i = ((int)(400 / this.cells.length));
 		bp = new BoardPanel(400,400,cells.length,cells.length,i,i,0,0);
-		
 		bp.setBoard(cells);
 		bp.setClickable(false);
 		add(bp);

@@ -9,6 +9,8 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.JPanel;
 import javax.swing.SpringLayout;
@@ -44,20 +46,21 @@ public class BoardSelectionPanel extends FadingPanel
                 SpringLayout.VERTICAL_CENTER, this);
 	}
 	
-	@Override
-	public void setVisible(boolean aFlag) {
-		// TODO Auto-generated method stub
-		super.setVisible(aFlag);
-		if (aFlag)
+	public void setVisibility(boolean b)
+	{
+		Timer timer = new Timer();
+		if (b)
 		{
 			try {
 				FileUtils.readFile();
 				boardOptionPanel = new BoardOptionPanel();
-				Timeline fadeInTimeline = new Timeline(this);
+				setVisible(true);
+				Utils.logg("herereere2");
+			/*	Timeline fadeInTimeline = new Timeline(this);
 			      fadeInTimeline.addPropertyToInterpolate("Fadev", 0.0f,
 							1.0f);
 			      fadeInTimeline.setDuration(2000);
-			      fadeInTimeline.play();
+			      fadeInTimeline.play();*/
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -65,6 +68,23 @@ public class BoardSelectionPanel extends FadingPanel
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}
+		else {
+			setVisible(false);
+		/*	Timeline fadeInTimeline = new Timeline(this);
+			fadeInTimeline.addPropertyToInterpolate("Fadev", 1.0f,
+						0.0f);
+			fadeInTimeline.setDuration(10);
+			fadeInTimeline.play();
+			TimerTask tt = new TimerTask() {
+				
+				@Override
+				public void run() {
+					Utils.logg("herereere");
+					setVisible(false);
+				}
+			};
+		      timer.schedule(tt, 2000);*/
 		}
 	}
 }

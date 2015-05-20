@@ -46,25 +46,16 @@ public class BoardFrame extends JFrame implements AnimationSubject
         BufferedImage backgroundImage = Utils.getImage("resources/images/office_bg.png", 960,540);
         setContentPane(new ImagePanel(backgroundImage));
 		boardSelectionPanel = new BoardSelectionPanel();
-		
 		boardEditorPanel = new BoardEditorPanel();
 		add(boardSelectionPanel);
-        
-        
-    /*  Timeline fadeInTimeline = new Timeline(this);
-      fadeInTimeline.addPropertyToInterpolate("value", 0.0f,
-				1.0f);
-      fadeInTimeline.setDuration(6000);
-      fadeInTimeline.play(); 
-		*/
+		add(boardEditorPanel);
+		boardEditorPanel.setVisible(false);
 	}
 	
 	public void boardSelected(BoardOption boardOption)
 	{
-		boardSelectionPanel.setVisible(false);
-		//remove(boardSelectionPanel);
+		boardSelectionPanel.setVisibility(false);
 		boardEditorPanel.editSelectedBoard(boardOption.myBoardCells);
-		add(boardEditorPanel);
 		boardEditorPanel.setVisible(true);
 	}
 

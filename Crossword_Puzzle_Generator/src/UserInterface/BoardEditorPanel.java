@@ -137,7 +137,6 @@ public class BoardEditorPanel extends FadingPanel
 	private void generator(String[][] cells)
 	{
 		setVisible(false);
-		Singleton.getInstance().boardFrame.remove(this);
 		Singleton.getInstance().boardFrame.add(new BoardGeneratorPanel(cells));
 	}
 
@@ -305,11 +304,18 @@ public class BoardEditorPanel extends FadingPanel
 			super.setVisible(aFlag);
 			if (aFlag)
 			{
-				Timeline fadeInTimeline = new Timeline(this);
-				fadeInTimeline.addPropertyToInterpolate("Fadev", 0.0f,
+			/*	Timeline fadeInTimeline = new Timeline(this);
+			      fadeInTimeline.addPropertyToInterpolate("Fadev", 0.0f,
 							1.0f);
-				fadeInTimeline.setDuration(2000);
-				fadeInTimeline.play();
+			      fadeInTimeline.setDuration(2000);
+			      fadeInTimeline.play();*/
 			}
-		}
+			else {
+			/*	Timeline fadeInTimeline = new Timeline(this);
+				fadeInTimeline.addPropertyToInterpolate("Fadev", 1.0f,
+							0.0f);
+				fadeInTimeline.setDuration(200);
+				fadeInTimeline.play();*/
+			}
+	 }
 }

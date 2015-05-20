@@ -23,7 +23,7 @@ public class BoardTile extends FadingPanel implements MouseListener
 {
 	Color myColor;
 	Boolean clickable = false;
-	JLabel label = new JLabel("a");
+	JLabel label = new JLabel("");
 	public BoardTile(int width,int height)
 	{
 		setSize(width,height);
@@ -88,4 +88,6 @@ public class BoardTile extends FadingPanel implements MouseListener
 		// TODO Auto-generated method stub
 	}
 	//MOUSE
+	
+	
 }
