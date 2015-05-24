@@ -24,7 +24,7 @@ public class Board implements BoardSubject {
 	public String[][] savedCells;
 	int myWidth;
 	int myHeight;
-	ArrayList<String> wordsInBoard = new ArrayList<String>();
+	public ArrayList<String> wordsInBoard = new ArrayList<String>();
 	ArrayList<ArrayList<int[]>> longestPaths = new ArrayList<ArrayList<int[]>>();
 	ArrayList<ArrayList<int[]>> otherPaths = new ArrayList<ArrayList<int[]>>();
 	public ArrayList<ArrayList<int[]>> allPaths = new ArrayList<ArrayList<int[]>>();
@@ -36,7 +36,6 @@ public class Board implements BoardSubject {
 	
 	public void clearAll()
 	{
-		setCells(savedCells);
 		wordsInBoard.clear();
 		longestPaths.clear();
 		otherPaths.clear();
@@ -68,7 +67,13 @@ public class Board implements BoardSubject {
 	}
 	public void saveCells(String[][] cells)
 	{
-		this.savedCells = cells;
+		String[][] temp = new String[cells.length][cells.length];
+		for (int i = 0; i < cells.length; i++) {
+			for (int j = 0; j < cells.length; j++) {
+				temp[i][j] = cells[i][j];
+			}
+		}
+		this.savedCells = temp;
 	}
 	
 	public static void printBoard(String[][] _cells)
@@ -252,10 +257,10 @@ public class Board implements BoardSubject {
 	private ArrayList<String> getWordsWithMaxScores(HashMap<String, Integer> map)
 	{
 		ArrayList<String> result = new ArrayList<String>();
-		 int maxValueInMap=(Collections.max(map.values()));  // This will return max value in the Hashmap
-	        for (Entry<String, Integer> entry : map.entrySet()) {  // Itrate through hashmap
+		 int maxValueInMap=(Collections.max(map.values()));  
+	        for (Entry<String, Integer> entry : map.entrySet()) {  
 	            if (entry.getValue()==maxValueInMap) {
-	                result.add(entry.getKey());     // Print the key with max value
+	                result.add(entry.getKey());
 	            }
 	        }
 	        return result;
@@ -410,7 +415,6 @@ public class Board implements BoardSubject {
 	{
 		log("Selecting Word For Path: ");
 		logCoords(list);
-	//	ArrayList<Integer> fullCells = new ArrayList<Integer>();
 		String[] letters = new String[list.size()];
 		for (int i = 0; i < list.size(); i++)
 		{
@@ -452,25 +456,12 @@ public class Board implements BoardSubject {
 		{
 			
 			double[] letter_scores = new double [letters.length];
-		/*	if (letters.length == 3 && todelete)
-			{
-				log("lets check it");
-			}*/
+
 			for (int i = 0; i < letters.length; i++)
 			{
 				ArrayList<ArrayList<int[]>> temp = owningPaths.get(list.get(i));
-				/*
-				log("todelete");
-				for (int j = 0; j < temp.size(); j++) 
-				{
-					logCoords(temp.get(j));
-				}
-				log("todelete");
-				*/
-				//DELETE
+
 				int score = 0;
-				
-				
 		
 				if (temp.size() > 0)
 				{

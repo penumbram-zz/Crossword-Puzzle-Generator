@@ -39,6 +39,7 @@ public class BoardPanel extends FadingPanel
 
 	public void setBoard(String[][] cellz)
     {
+		removeAll();
 		tiles = new BoardTile[cellz.length][cellz.length];
 		for (int i = 0; i < cellz.length; i++)
 		{

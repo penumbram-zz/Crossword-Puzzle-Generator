@@ -83,7 +83,13 @@ public class Dictionary
 				all_two_letter_combinations.add(concat);
 			}
 		}
+		letterLists.get(2).clear();
 		letterLists.get(2).addAll(all_two_letter_combinations);
+		
+		for (ArrayList<String> list : letterLists)
+		{
+			System.out.println(list.size());
+		}
 	}
 	
 	public void printDictionary()

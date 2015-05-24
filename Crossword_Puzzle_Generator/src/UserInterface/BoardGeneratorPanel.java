@@ -10,6 +10,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.JOptionPane;
 import javax.swing.Spring;
@@ -38,6 +40,10 @@ public class BoardGeneratorPanel extends FadingPanel implements BoardObserver {
 	Timeline timeline;
 	int rotation = 0;
 	boolean loading = false;
+	
+	String latestRuleOut = "";
+	
+	Dictionary dict;
 	
 	@Override
 	protected void paintComponent(Graphics g) {
@@ -88,6 +94,16 @@ public class BoardGeneratorPanel extends FadingPanel implements BoardObserver {
 				setGenerationParameters();
 				generate();
 				buttonGenerate.setVisible(false);
+				Timer timer = new Timer();
+
+				timer.schedule( new TimerTask() {
+				    public void run() {
+				       if (regenerate) 
+				       {
+				    	   regenerate(latestRuleOut);
+				       } 
+				    }
+				 }, 0, 1000);
 			}
 		});
 		
@@ -107,6 +123,10 @@ public class BoardGeneratorPanel extends FadingPanel implements BoardObserver {
 		timeline = new Timeline(this);
 		timeline.addPropertyToInterpolate("rotation", 0, 360);
 		timeline.setDuration(1000);
+		
+		dict = new Dictionary();
+		dict.fillDictionary();
+		
 	}
 	
 	public void setRotation(int rot)
@@ -133,10 +153,9 @@ public class BoardGeneratorPanel extends FadingPanel implements BoardObserver {
 	private void setGenerationParameters()
 	{
 		board = new Board(cells.length,cells.length);
-		Dictionary dict = new Dictionary();
-		dict.fillDictionary();
 		board.setCells(cells);
 		board.saveCells(cells);
+	//	board.ruledOutWords.add("goo");
 		board.registerObserver(this);
 	}
 	
@@ -147,6 +166,9 @@ public class BoardGeneratorPanel extends FadingPanel implements BoardObserver {
 			@Override
 			public void run() 
 			{
+				regenerate = false;
+				latestRuleOut = "";
+				long startTime = System.currentTimeMillis();
 				loading = true;
 				board.searchLongestPaths();
 				board.fillLongestWords();
@@ -158,21 +180,21 @@ public class BoardGeneratorPanel extends FadingPanel implements BoardObserver {
 				ArrayList<int[]> validation = board.validate();
 				timeline.cancel();
 				loading = false;
+				long stopTime = System.currentTimeMillis();
+				long elapsedTime = stopTime - startTime;
 				if (validation == null)
 				{
+					
 					regenerate = false;
-					JOptionPane.showMessageDialog(null, board.getWordsInBoard());
+					JOptionPane.showMessageDialog(null, board.getWordsInBoard() + "\n Time Elapsed: " + String.valueOf(elapsedTime) + " ms");
 				}
 				else
 				{
-					String problem = "";
-					for (int[] acell : validation)
-					{
-						problem += board.cells[acell[0]][acell[1]];	
-					}
+					JOptionPane.showMessageDialog(null, "Failed to Validate" + "\n Time Elapsed: " + String.valueOf(elapsedTime) + " ms");
+					String problem = board.wordsInBoard.get(0);
 					Utils.logg("PROBLEM PROBLEM PROBLEM PROBLEM PROBLEM");
 					Utils.logg(problem);
-					board.ruledOutWords.add(problem);
+					latestRuleOut = problem;
 					regenerate = true;
 				}
 			}
@@ -180,18 +202,32 @@ public class BoardGeneratorPanel extends FadingPanel implements BoardObserver {
 		thread = new Thread(runnable);
 		thread.start();
 		timeline.playLoop(RepeatBehavior.LOOP);
-		if (regenerate)
-		{
-			board.clearAll();
-			generate();
-		}
+	}
+	private void regenerate(String ruleOut)
+	{
+		board.removeObserver(this);
+		String[][] temp = board.savedCells;
+		Board.printBoard(board.savedCells);
+		
+		board = null;
+		board = new Board(cells.length,cells.length);
+		board.ruledOutWords.add(ruleOut);
+		board.saveCells(temp);
+		board.setCells(temp);
+		
+		board.registerObserver(this);
+		board.clearAll();
+		bp.setBoard(temp);
+		bp.invalidate();
+		bp.repaint();
+		generate();
 	}
 	
 	private void fillEmptyCellsWithBlackCells()
 	{
 		for (int i = 0; i < cells.length; i++) {
 			for (int j = 0; j < cells.length; j++) {
-				if (cells[i][j] == " ")
+				if (cells[i][j] == " " || cells[i][j] == "X")
 				{
 					bp.tiles[i][j].setBackground(Color.BLACK);
 					bp.tiles[i][j].invalidate();
