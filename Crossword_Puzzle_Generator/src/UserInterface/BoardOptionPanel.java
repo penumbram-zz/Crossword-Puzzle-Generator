@@ -3,29 +3,25 @@ package UserInterface;
 import CommandPattern.Command;
 import CommandPattern.Invoker;
 import CommandPattern.SelectBoardCommand;
-import Observer.AnimationObserver;
-import Utility.FileUtils;
 import Utility.Singleton;
 import Utility.Utils;
 
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
-import javax.swing.JButton;
-import javax.swing.JPanel;
+
 import javax.swing.SpringLayout;
 import javax.swing.plaf.basic.BasicArrowButton;
 
 public class BoardOptionPanel extends FadingPanel
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	Invoker invoker = new Invoker();
 	Image bgImage = Utils.getImage("resources/images/tahta_BG.png", 800, 400);
 	public BoardOption previous;

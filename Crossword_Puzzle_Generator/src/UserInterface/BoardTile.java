@@ -1,26 +1,19 @@
 package UserInterface;
 
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.BorderFactory;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
-
-import org.pushingpixels.trident.Timeline;
-
-import Observer.AnimationObserver;
-import Utility.Singleton;
-import Utility.Utils;
 
 public class BoardTile extends FadingPanel implements MouseListener
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	Color myColor;
 	Boolean clickable = false;
 	JLabel label = new JLabel("");

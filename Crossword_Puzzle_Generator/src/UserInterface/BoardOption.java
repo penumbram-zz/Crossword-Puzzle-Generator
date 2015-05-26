@@ -1,15 +1,10 @@
 package UserInterface;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.util.HashMap;
 
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
 import Generator.Board;
-import Observer.AnimationObserver;
 import Observer.DisplayBoard;
 import Observer.Observer;
 import Utility.Singleton;
@@ -17,6 +12,10 @@ import Utility.Utils;
 
 public class BoardOption extends FadingPanel implements Observer, DisplayBoard
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	String[][] myBoardCells = null;
 	Dimension myDimension = null;
 	public BoardPanel bp;
@@ -54,7 +53,8 @@ public class BoardOption extends FadingPanel implements Observer, DisplayBoard
 	
 	public void deselect()
 	{
-		this.selected = false;
+		if (selected)
+			selected = false;
 		System.out.println("Deselected");
 	}
 

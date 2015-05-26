@@ -6,16 +6,18 @@ import java.awt.Component;
 import java.awt.Composite;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
 import Observer.AnimationObserver;
-import Utility.Utils;
 
 public class FadingPanel extends JPanel implements AnimationObserver {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	float opacity = 1f;
 	ArrayList<AnimationObserver> animatingObservers;
 	Color backgroundColor = null;

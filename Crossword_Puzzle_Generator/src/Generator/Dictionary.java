@@ -5,7 +5,6 @@ package Generator;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.logging.Logger;
 
 
 public class Dictionary 

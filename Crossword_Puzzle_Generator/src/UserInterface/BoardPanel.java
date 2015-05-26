@@ -1,26 +1,17 @@
 package UserInterface;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.GridLayout;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.ArrayList;
 
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 
-import org.pushingpixels.trident.Timeline;
-
-import Observer.AnimationObserver;
-import Utility.Singleton;
-import Utility.Utils;
-import Generator.Board;
 
 public class BoardPanel extends FadingPanel
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int tileWidth;
 	private int tileHeight;
 	public BoardTile[][] tiles;

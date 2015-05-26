@@ -8,17 +8,14 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JSpinner.DefaultEditor;
 import javax.swing.SpinnerModel;
@@ -27,16 +24,18 @@ import javax.swing.SpringLayout;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.pushingpixels.trident.Timeline;
 
 import Utility.FileUtils;
 import Utility.Singleton;
 import Utility.Utils;
 import Generator.Board;
-import Generator.Main;
 
 public class BoardEditorPanel extends FadingPanel 
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	SpringLayout springLayout;
 	private BoardPanel bp;
 	BoardEditorPanel boardEditorPanel;

@@ -2,18 +2,13 @@ package Generator;
 
 
 
-import java.awt.List;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Random;
-import java.util.logging.Logger;
 
-import Observer.AnimationObserver;
 import Observer.BoardObserver;
 import Observer.BoardSubject;
 
@@ -164,7 +159,7 @@ public class Board implements BoardSubject {
 		}
 	}
 	
-	private int getRange(int[] coords,boolean vertical)
+/*	private int getRange(int[] coords,boolean vertical)
 	{
 		
 		int x = coords[0];
@@ -207,7 +202,7 @@ public class Board implements BoardSubject {
 		}
 		return count;
 	}
-	
+*/	
 	private void placeWord(ArrayList<int[]> someList,boolean isVertical)
 	{
 		int l = someList.size(); // width of the word
@@ -225,19 +220,6 @@ public class Board implements BoardSubject {
 	 	
 		if (word == null) 
 			return;
-		
-		int a;
-		int b;
-		if (isVertical)
-		{
-			a = 0;
-			b = 1;
-		}
-		else
-		{
-			a = 1;
-			b = 0;
-		}
 
 		for (int j = 0; j < someList.size(); j++)
 		{
@@ -266,6 +248,7 @@ public class Board implements BoardSubject {
 	        return result;
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public void searchLongestPaths()
 	{
 		log("---------  Horizontal --------");
@@ -390,9 +373,6 @@ public class Board implements BoardSubject {
 	
 	private boolean isVertical(ArrayList<int[]> path)
 	{
-		int a = -1;
-		int b = -1;
-
 		if (path.get(0)[0] == path.get(1)[0])
 			return true;
 		else if (path.get(0)[1] == path.get(1)[1])

@@ -8,32 +8,27 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
-import javafx.scene.control.Label;
-
-import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.SpringLayout;
-import javax.swing.SwingConstants;
-import javax.swing.text.StyledEditorKit.BoldAction;
 
 import org.pushingpixels.trident.Timeline;
 import org.pushingpixels.trident.Timeline.RepeatBehavior;
-import org.pushingpixels.trident.Timeline.TimelineState;
-import org.pushingpixels.trident.callback.TimelineCallback;
 
 import Observer.AnimationObserver;
-import Utility.Utils;
+
 
 public class Button extends JButton implements ActionListener,MouseListener,AnimationObserver
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	BufferedImage image;
 	BufferedImage glowImage;
 	JLabel label;

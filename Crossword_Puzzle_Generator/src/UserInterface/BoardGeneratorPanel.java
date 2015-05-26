@@ -3,7 +3,6 @@ package UserInterface;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
@@ -14,7 +13,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.swing.JOptionPane;
-import javax.swing.Spring;
 import javax.swing.SpringLayout;
 
 import org.pushingpixels.trident.Timeline;
@@ -27,6 +25,10 @@ import Utility.Singleton;
 import Utility.Utils;
 
 public class BoardGeneratorPanel extends FadingPanel implements BoardObserver {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	SpringLayout springLayout;
 	private BoardPanel bp;
 	BufferedImage loadingImage = Utils.getImage("resources/images/loading.png", 50, 50);
@@ -135,6 +137,7 @@ public class BoardGeneratorPanel extends FadingPanel implements BoardObserver {
 		repaint();
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void goBack()
 	{
 		Singleton.getInstance().boardFrame.setVisible(false);
@@ -176,7 +179,7 @@ public class BoardGeneratorPanel extends FadingPanel implements BoardObserver {
 				fillEmptyCellsWithBlackCells();
 				board.fillEmptyCellsWithBlackCells();
 				Utils.logg("AFTER");
-				board.printBoard(board.cells);
+				Board.printBoard(board.cells);
 				ArrayList<int[]> validation = board.validate();
 				timeline.cancel();
 				loading = false;

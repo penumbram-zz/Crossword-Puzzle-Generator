@@ -1,10 +1,6 @@
 package Generator;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import UserInterface.MainFrame;
 import Utility.FileUtils;
@@ -18,14 +14,6 @@ public class Main {
 	
 	public static void main(String[] args) 
 	{	
-		
-		
-		
-		Board board = new Board(10,10);
-		/*board.initBoard();
-		board.fillBoardWithFixedBlackCells();
-		mainFrame.boardFrame.boardPanel.setBoard(board.cells);
-		*/
 		try 
 		{
 			FileUtils.readFile();

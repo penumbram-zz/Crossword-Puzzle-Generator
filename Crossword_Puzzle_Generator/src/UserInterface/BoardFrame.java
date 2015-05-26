@@ -1,25 +1,22 @@
 package UserInterface;
 
 import java.awt.Color;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
 
-import org.pushingpixels.trident.Timeline;
-import org.pushingpixels.trident.Timeline.RepeatBehavior;
-
 import Observer.AnimationObserver;
 import Observer.AnimationSubject;
-import Observer.Observer;
 import Utility.Singleton;
 import Utility.Utils;
 
 public class BoardFrame extends JFrame implements AnimationSubject
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public BoardPanel boardPanel;
 	public BoardSelectionPanel boardSelectionPanel;
 	public BoardEditorPanel boardEditorPanel;

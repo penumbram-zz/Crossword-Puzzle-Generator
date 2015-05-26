@@ -1,30 +1,19 @@
 package UserInterface;
 
-import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Timer;
-import java.util.TimerTask;
 
-import javax.swing.JPanel;
 import javax.swing.SpringLayout;
 
-import org.pushingpixels.trident.Timeline;
-
-import Generator.Board;
-import Observer.AnimationObserver;
 import Utility.FileUtils;
-import Utility.Singleton;
 import Utility.Utils;
 
 public class BoardSelectionPanel extends FadingPanel
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public BoardOptionPanel boardOptionPanel;
 
 	public BoardSelectionPanel()
@@ -48,7 +37,6 @@ public class BoardSelectionPanel extends FadingPanel
 	
 	public void setVisibility(boolean b)
 	{
-		Timer timer = new Timer();
 		if (b)
 		{
 			try {

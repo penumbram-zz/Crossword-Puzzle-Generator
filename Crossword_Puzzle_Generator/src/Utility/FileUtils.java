@@ -6,8 +6,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import Generator.Board;
-
 public class FileUtils 
 {
 
@@ -78,7 +76,7 @@ public class FileUtils
 	{  
 	  try  
 	  {  
-	    double d = Double.parseDouble(str);  
+		  Double.parseDouble(str);  
 	  }  
 	  catch(NumberFormatException nfe)  
 	  {  
