@@ -37,21 +37,5 @@ public class Main {
 		
 		MainFrame mainFrame = new MainFrame();
         mainFrame.setVisible(true);
-		
-		boolean b = true;
-		if (b)
-			return;
-		
-		board.searchLongestPaths();
-		
-		Board.printBoard(board.cells);
-		
-		Dictionary dict = new Dictionary();
-		dict.fillDictionary();
-		board.fillLongestWords();
-		Board.printBoard(board.cells);
-		board.fillRestOfWords();
-		board.fillEmptyCellsWithBlackCells();
-		Board.printBoard(board.cells);
 	}
 }
